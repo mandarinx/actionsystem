@@ -24,7 +24,7 @@ namespace RL {
                 Vector3 pos = start + dir * travel;
                 source.transform.position = pos;
                 PropPosition.SetWorldPos(propPos, pos);
-                travel += Time.deltaTime;
+                travel += Time.deltaTime * CFG.E_SPEED;
                 yield return null;
             }
             

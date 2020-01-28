@@ -8,6 +8,7 @@ namespace RL {
 
         public const string PPKEY_DRAW_GRID = "dbgDrawGrid";
 
+        public const float  E_SPEED = 10f;
         public const int    EID_PLAYER      = 1000;
         public const string E_PLAYER_NAME = "Player";
 

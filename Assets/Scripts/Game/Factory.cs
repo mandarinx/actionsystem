@@ -18,8 +18,7 @@ namespace RL {
             Item.SetName(item, name);
             ItemDataSystem.Set(item, new ItemData());
             
-            PropPosition pos = Property.Add<PropPosition>(item);
-            PropPosition.SetName(pos, name);
+            Property.Add<PropPosition>(item);
             
             return item;
         }

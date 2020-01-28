@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 55deb4c94171348239837f51eb79fc2e
+  m_SerializeEntries:
+  - m_GUID: 7aef510e264c94e70b23e2d943d63c70
+    m_Address: Assets/Tiles/Entities
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - entities
+    m_mainAssetType: 
+  - m_GUID: af25abb3a6c3c458eb2f671e749e4cb7
+    m_Address: Assets/Tiles/Items
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - items
+    m_mainAssetType: 
+  - m_GUID: c30f5e3cabb3f45a9af1d181b425732d
+    m_Address: Assets/Tiles/Misc
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - misc
+    m_mainAssetType: 
+  - m_GUID: c843a8d148d0f4330b0062476f556a5c
+    m_Address: Assets/Tiles/Floors
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - floors
+    m_mainAssetType: 
+  - m_GUID: e5724e400fc574722a88e6c26e87d0bb
+    m_Address: Assets/Tiles/Walls
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - walls
+    m_mainAssetType: 
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: eb3003041d446428eaa837f308abb9f7, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 7625318a4679d473db19cc49d8a44a51, type: 2}
+    - {fileID: 11400000, guid: 7b401191fb2f04258bf46810c2dc3365, type: 2}

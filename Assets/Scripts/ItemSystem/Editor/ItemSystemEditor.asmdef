@@ -1,0 +1,16 @@
+{
+    "name": "ItemSystemEditor",
+    "references": [
+        "GUID:a782cc7eff0524edebb84f21b45a76db"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

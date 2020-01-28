@@ -22,8 +22,8 @@ namespace RL {
                 return;
             }
             ClearLog();
-            Vector3 mouse = cam.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
-            Vector2Int coord = Map.GetCoord(mouse);
+            Vector3 mouse = cam.ScreenToWorldPoint(Input.mousePosition);
+            Vector2Int coord = Map.GetCoord(mouse, CFG.MAP_WIDTH, CFG.MAP_HEIGHT);
             int index = Map.GetIndex(coord);
             int tile = Map.GetTile(gameManager.Game.map, index);
             

@@ -11,8 +11,7 @@ namespace RL {
         public MapRenderer(int width, int height) {
             tiles = new Item[width * height];
             for (int i = 0; i < tiles.Length; ++i) {
-                Coord coord = Map.GetCoord(i);
-                // Debug.Log($"tile[{i}], index: {coord.index}, map: {coord.map}, world: {coord.world}");
+                Coord coord = Map.GetCoord(i, CFG.MAP_WIDTH);
                 tiles[i] = Factory.CreateItem($"{coord.map.x}_{coord.map.y}");
                 Item.SetLocalPosition(tiles[i], coord.world);
             }

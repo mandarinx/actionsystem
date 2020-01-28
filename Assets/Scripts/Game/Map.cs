@@ -29,7 +29,7 @@ namespace RL {
             int len = rect.width * rect.height;
             // Debug.Log($"FillRect len: {len}");
             for (int i = 0; i < len; ++i) {
-                Vector2Int coord = GetCoord(i).map;
+                Vector2Int coord = GetCoord(i, rect.width).map;
                 int index = GetIndex(rect.x + coord.x, rect.y + coord.y);
                 // Debug.Log($"Coord: {coord} index: {index}");
                 map.tiles[index] = tile;
@@ -63,14 +63,14 @@ namespace RL {
             return GetIndex(coord.x, coord.y);
         }
 
-        public static Vector2Int GetCoord(Vector3 worldPos) {
-            return new Vector2Int(Mathf.Clamp(Mathf.FloorToInt(worldPos.x), 0, CFG.MAP_WIDTH - 1), 
-                                  Mathf.Clamp(Mathf.FloorToInt(worldPos.y), 0, CFG.MAP_HEIGHT - 1));
+        public static Vector2Int GetCoord(Vector3 worldPos, int width, int height) {
+            return new Vector2Int(Mathf.Clamp(Mathf.FloorToInt(worldPos.x), 0, width - 1), 
+                                  Mathf.Clamp(Mathf.FloorToInt(worldPos.y), 0, height - 1));
         }
 
-        public static Coord GetCoord(int index) {
-            return new Coord(new Vector2Int(index % CFG.MAP_WIDTH,
-                                            Mathf.FloorToInt((float)index / CFG.MAP_WIDTH)));
+        public static Coord GetCoord(int index, int width) {
+            return new Coord(new Vector2Int(index % width,
+                                            Mathf.FloorToInt((float)index / width)));
         }
 
         public static Vector3 GetWorldCoord(Vector2Int mapCoord) {

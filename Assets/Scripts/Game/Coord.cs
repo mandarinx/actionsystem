@@ -21,7 +21,7 @@ namespace RL {
 
         public static void SetWorldPosition(Coord mc, Vector3 worldPos) {
             mc.world = worldPos;
-            mc.map   = Map.GetCoord(worldPos);
+            mc.map   = Map.GetCoord(worldPos, CFG.MAP_WIDTH, CFG.MAP_HEIGHT);
             mc.index = Map.GetIndex(mc.map);
         }
 

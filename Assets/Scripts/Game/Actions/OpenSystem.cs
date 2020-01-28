@@ -12,7 +12,7 @@ namespace RL {
 
         public Type TargetProperty => typeof(PropLock);
 
-        public IEnumerator Resolve(Item source, IAction sourceAction, Item target, IProperty targetProp) {
+        public IEnumerator Resolve(Item source, IAction sourceAction, Item target, Bridge bridge) {
             yield break;
         }
     }

@@ -1,37 +1,67 @@
 ﻿using Altruist;
+using UnityEngine;
 
 namespace RL {
 
     public static class Verbs {
 
-        public static void Main(Item player, Item floorTile) {
-        
-            if (Inventory.Count(floorTile.Items) > 0) {
-                PickupAction pickupAction = Action.Get(player).Find<PickupAction>();
-                if (pickupAction == null) {
+        public static void Main(Game game, Item player, Coord selCoord, ActionRunner runner) {
+
+            if (!Input.GetKeyUp(KeyCode.Space)) {
+                return;
+            }
+
+            // Is there an Item on the floor?
+            Item target = Map.GetItem(game.map, selCoord, CFG.LAYER_1);
+            if (target != null) {
+             
+                Debug.Log("there is something on the floor");
+                
+                // Try to pick it up
+                if (Do<PickupAction>(player, target, runner)) {
+                    Debug.Log("its possible to pick up");
                     return;
                 }
-                
-                Item item = Inventory.GetFirst(floorTile.Items);
-                ActionSystem.Resolve(player, pickupAction, item);
-            }
-                
-            // check map for entities at floorCoord
-                // > fight
-            
-            MoveAction moveAction = Action.Get(player).Find<MoveAction>();
-            ActionSystem.Resolve(player, moveAction, floorTile);
 
-            // Could make a MoveAction that targets a PositionProp.
-            // Anything that occupies a position has a PositionProp.
-            // The PositionProp could communicate with a centralized system for more efficiently
-            // handling indexing of positions.
-            // Rendering Items would need to get all coordinates from the central system,
-            // then get all the corresponding Items, and update their transform.
-            // PositionProp would only be a bridge from an Item into the positioning system, and
-            // the position data could be read/write. That would make it possible for Items to
-            // push each other. An Item can be pushed into a wall, unless something prevents it.
-            // Could use a property change event on all Items? 
+                // Try to push it
+                if (Do<PushAction>(player, target, runner)) {
+                    Debug.Log("it can be pushed");
+                    return;
+                }
+            }
+
+            // Get the floor tile
+            target = Map.GetItem(game.map, selCoord, CFG.LAYER_0);
+            Debug.Log($"Tile {target.name} is {(Map.IsWalkable(game.map, selCoord) ? "walkable" : "blocked")}");
+            
+            if (Map.IsWalkable(game.map, selCoord)) {
+                MoveAction moveAction = Action.Get(player).Find<MoveAction>();
+                ActionSystem.Resolve(player, moveAction, target, runner);
+                runner.Start();
+                return;
+            }
+            
+            // else if player has the means to break through a non-walkable tile
+            
+            // if tile is water, change to SwimAction.
+            // > Swim could toggle a state machine that consumes energy
+            // > for each turn the player is in water.
+        }
+
+        private static bool Do<T>(Item source, Item target, ActionRunner runner) where T : Component, IAction {
+            T action = Action.Get(source).Find<T>();
+
+            if (action == null) {
+                return false;
+            }
+
+            if (!ActionSystem.CanResolveFor(action, target)) {
+                return false;
+            }
+            
+            ActionSystem.Resolve(source, action, target, runner);
+            runner.Start();
+            return true;
         }
     }
 }

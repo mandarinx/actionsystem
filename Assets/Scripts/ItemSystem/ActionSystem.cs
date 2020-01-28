@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using AptGames;
 using Debug = UnityEngine.Debug;
 
 namespace Altruist {
@@ -13,7 +12,7 @@ namespace Altruist {
     public delegate IEnumerator Resolver(Item      source,
                                          IAction   sourceAction,
                                          Item      target,
-                                         IProperty targetProp);
+                                         Bridge    bridge);
     
     public class ActionSystem {
         
@@ -24,12 +23,18 @@ namespace Altruist {
 
         private          Dictionary<Type, IActionSystem> systems;
         private readonly string[]                        assemblies;
+        private readonly Bridge                          bridge;
         private static   ActionSystem                    self;
         
         public ActionSystem(params string[] assemblyNames) {
             self = this;
+            bridge = new Bridge();
             assemblies = new string[assemblyNames.Length];
             Array.Copy(assemblyNames, assemblies, assemblyNames.Length);
+        }
+
+        public void BridgeWith(object service) {
+            bridge.Add(service);
         }
         
         public void RegisterSystems() {
@@ -67,44 +72,84 @@ namespace Altruist {
             return self.systems[actionType];
         }
 
-        public static void Resolve(Item source, Item target) {
-            IAction[] actions = Action.Get(source);
+        private static IEnumerator[] GetResolversAsEnumerators(Item source, Item target) {
+            IAction[]     actions   = Action.Get(source);
+            IEnumerator[] resolvers = new IEnumerator[actions.Length];
+
             for (int i = 0; i < actions.Length; ++i) {
-                Resolve(source, actions[i], target);
+                if (TryResolveFor(actions[i], target, out IProperty property, out Resolver resolver)) {
+                    resolvers[i] = resolver(source, actions[i], target, self.bridge);
+                }
             }
+            
+            return resolvers;
         }
 
-        // Returns true or false depending on whether the Action was resolvable or not
-        public static void Resolve(Item source, IAction action, Item target) {
+        private static IEnumerator GetResolverAsEnumerators(Item source, IAction action, Item target) {
+            return TryResolveFor(action, target, out IProperty property, out Resolver resolver) 
+                ? resolver(source, action, target, self.bridge) 
+                : NullResolver(source, action, target, self.bridge);
+        }
+
+        public static void Resolve(Item source, Item target, ActionRunner runner) {
+            runner.AddEnumerators(GetResolversAsEnumerators(source, target));
+        }
+
+        public static void Resolve(Item source, IAction action, Item target, ActionRunner runner) {
+            runner.AddEnumerators(GetResolverAsEnumerators(source, action, target));
+        }
+
+        public static bool CanResolveFor(IAction action, Item target) {
+            Type actionType = action.GetType();
+            
+            if (!HasSystemFor(actionType)) {
+                return false;
+            }
+
+            if (!TryGetResolvedProperty(target, action, out IProperty property)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool TryResolveFor(IAction action, Item target, out IProperty property, out Resolver resolver) {
             Type actionType = action.GetType();
                 
             if (!HasSystemFor(actionType)) {
                 Debug.Log($"ActionSystem has no system for {actionType}");
-                return;
+                property = null;
+                resolver = NullResolver;
+                return false;
             }
 
-            IProperty[] properties = Property.Get(target);
-            int pi = GetIndexOfResolvedProperty(actionType, properties);
-            // Debug.Log($"Target {target.name} has {properties.Length} properties, and the resolved one is at {pi}");
-            if (pi < 0) {
-                return;
+            if (!TryGetResolvedProperty(target, action, out property)) {
+                resolver = NullResolver;
+                return false;
             }
 
-            Resolver resolver = GetResolver(action);
-            Coroutines.Run(resolver(source, action, target, properties[pi]));
+            resolver = GetResolver(action);
+            return true;
         }
 
-        private static int GetIndexOfResolvedProperty(Type                     actionType,
-                                                      IReadOnlyList<IProperty> properties) {
-            IActionSystem system = Get(actionType);
-            for (int i = 0; i < properties.Count; ++i) {
+        private static bool TryGetResolvedProperty(Item target, IAction action, out IProperty property) {
+            Type          actionType = action.GetType();
+            IProperty[]   properties = Property.Get(target);
+            int           pi         = -1;
+            IActionSystem system     = Get(actionType);
+
+            for (int i = 0; i < properties.Length; ++i) {
                 // system.TargetProperty.IsInstanceOfType(properties[i]) // Permissive
                 if (system.TargetProperty != properties[i].GetType()) { // Strict
                     continue;
                 }
-                return i;
+                pi = i;
+                break;
             }
-            return -1;
+            
+            // Debug.Log($"Target {target.name} has {properties.Length} properties, and the resolved one is at {pi}");
+            property = pi < 0 ? default : properties[pi];
+            return pi >= 0;
         }
         
         // As long as there is at least one property that matches the Action's
@@ -231,6 +276,13 @@ namespace Altruist {
         private static ActionSystemAttribute GetAttribute(Type type) {
             return (ActionSystemAttribute)Attribute.GetCustomAttribute(type, 
                                                                        typeof(ActionSystemAttribute));
+        }
+
+        private static IEnumerator NullResolver(Item      source,
+                                                IAction   sourceAction,
+                                                Item      target,
+                                                Bridge bridge) {
+            yield break;
         }
 
         [Conditional("LOG")]

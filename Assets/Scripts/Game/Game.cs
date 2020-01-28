@@ -7,32 +7,43 @@ namespace RL {
         
         public readonly Map map;
 
-        private readonly Item        player;
-        private readonly Item        selection;
-        private readonly MapRenderer mapRen;
-        private readonly Assets      assets;
+        private readonly Item         player;
+        private readonly Item         selection;
+        private readonly Assets       assets;
+        private readonly ActionRunner actionRunnerPlayer;
 
         public Game(Assets assets) {
             this.assets = assets;
             
             ActionSystem actionSys = new ActionSystem("RL");
             actionSys.RegisterSystems();
+
+            actionRunnerPlayer = ActionRunner.Create("ActionRunner_Player");
             
             map = new Map(CFG.MAP_WIDTH, CFG.MAP_HEIGHT);
-            mapRen = new MapRenderer(CFG.MAP_WIDTH, CFG.MAP_HEIGHT);
-
             Map.CreateRoom(map, new Vector2Int(2, 2), 8, 6);
+            MapRenderer.DrawLayer(map, CFG.LAYER_0, assets);
 
             player = Factory.CreateItem("Player");
             Item.SetSprite(player, Assets.GetEntity(assets, "Player"));
-            Coord playerCoord = PositionSystem.Get("Player", new Vector2Int(3, 3));
-            Item.SetLocalPosition(player, playerCoord.world);
-            Item.SetSortingOrder(player, 10);
+            Map.AddItem(map, player, new Coord(3, 3), CFG.LAYER_1);
             Action.Add<PickupAction>(player);
             Action.Add<MoveAction>(player);
+            Action.Add<PushAction>(player);
             ItemDataSystem.Set(player, new ItemData {
                 strength = 10
             });
+
+            Item sword = Factory.CreateItem("Sword");
+            Item.SetSprite(sword, Assets.GetItem(assets, "Sword"));
+            Property.Add<PropWeight>(sword);
+            Map.AddItem(map, sword, new Coord(new Vector2Int(4, 3)), CFG.LAYER_1);
+
+            Item crate = Factory.CreateItem("Crate");
+            Item.SetSprite(crate, Assets.GetItem(assets, "Crate"));
+            Map.AddItem(map, crate, new Coord(5, 4), CFG.LAYER_1);
+            Property.Add<PropPushable>(crate);
+            Action.Add<MoveAction>(crate);
 
             selection = Factory.CreateItem("Selection");
             Item.SetSprite(selection, Assets.GetMisc(assets, "Selection"));
@@ -40,27 +51,30 @@ namespace RL {
             Item.SetLocalPosition(selection, selectionCoord.world);
             Item.SetSortingOrder(selection, 100);
 
-            Item sword = Factory.CreateItem("Sword");
-            Item.SetSprite(sword, Assets.GetItem(assets, "Sword"));
-            Item.SetSortingOrder(sword, 1);
-            Property.Add<PropWeight>(sword);
-            Coord swordCoord = new Coord(new Vector2Int(4, 3));
-            Inventory.Add(MapRenderer.GetTile(mapRen, swordCoord).Items, sword);
-
+            actionSys.BridgeWith(map);
+            actionSys.BridgeWith(actionRunnerPlayer);
             
             Camera.main.transform.position = new Vector3(CFG.MAP_WIDTH  * 0.5f,
                                                          CFG.MAP_HEIGHT * 0.5f,
                                                          -10.0f);
         }
 
-        public static void Draw(Game game) {
-            MapRenderer.DrawLayer(game.mapRen, game.map, game.assets, 0);
-        }
+        public void Update() {
 
-        public static void Update(Game game) {
+            while (actionRunnerPlayer.IsRunning) {
+                return;
+            }
+            
+            // while npc actions running
+            // > return
+
+            if (Property.Has<PropDead>(player)) {
+                Debug.Log("GAME OVER");
+                return;
+            }
+
             Coord sc = PositionSystem.Get("Selection");
             Coord pc = PositionSystem.Get("Player");
-            // use a state machine for handling player and game turn
             
             if (Input.GetKeyUp(KeyCode.UpArrow)
                 && sc.map.y <= pc.map.y) {
@@ -80,19 +94,9 @@ namespace RL {
             }
             
             PositionSystem.Set("Selection", sc);
-            Item.SetLocalPosition(game.selection, sc.world);
+            Item.SetLocalPosition(selection, sc.world);
 
-            if (Input.GetKeyUp(KeyCode.Space)) {
-                Verbs.Main(game.player, 
-                           MapRenderer.GetTile(game.mapRen, sc.index));
-            }
-            
-            // Create a separate runner, just for player actions
-            // while (Coroutines.IsRunning) {
-            //   return;
-            // }
-            
-            // Advance game
+            Verbs.Main(this, player, sc, actionRunnerPlayer);
         }
     }
 }

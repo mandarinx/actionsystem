@@ -9,6 +9,6 @@ namespace Altruist {
         IEnumerator Resolve(Item      source,
                             IAction   sourceAction,
                             Item      target,
-                            IProperty targetProp);
+                            Bridge bridge);
     }
 }

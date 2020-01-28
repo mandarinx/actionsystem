@@ -23,12 +23,12 @@ namespace RL {
             }
             ClearLog();
             Vector3 mouse = cam.ScreenToWorldPoint(Input.mousePosition);
-            Vector2Int coord = Map.GetCoord(mouse, CFG.MAP_WIDTH, CFG.MAP_HEIGHT);
+            Coord coord = Map.GetCoord(mouse, CFG.MAP_WIDTH, CFG.MAP_HEIGHT);
             int index = Map.GetIndex(coord);
-            int tile = Map.GetTile(gameManager.Game.map, index);
+            int tile = Map.GetData(gameManager.Game.map, coord);
             
             Log($"Mouse [x: {mouse.x:00.000}, y: {mouse.y:00.000}]");
-            Log($"Map coord [x: {coord.x}, y: {coord.y}]");
+            Log($"Map coord [x: {coord.map.x}, y: {coord.map.y}]");
             Log($"Map index: {index}");
             Log($"Tile: {tile}");
 

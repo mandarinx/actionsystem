@@ -6,6 +6,9 @@ namespace RL {
         public const int MAP_WIDTH  = 16;
         public const int MAP_HEIGHT = 10;
 
+        public const int LAYER_0 = 0;
+        public const int LAYER_1 = 1;
+        
         public const string PPKEY_DRAW_GRID = "dbgDrawGrid";
 
         public const float  E_SPEED = 10f;

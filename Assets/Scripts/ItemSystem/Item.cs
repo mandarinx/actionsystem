@@ -18,7 +18,7 @@ namespace Altruist {
         // by the owner of the Inventory. An Inventory is always
         // owned by an Item, so any Items in an Inventory is owned
         // by a survivor, skill or whatever the Item represents.
-        private Item owner;
+        public Item Owner { get; private set; }
 
         private void Awake() {
             Items      = T.Find<Inventory>(transform, "Items");
@@ -43,7 +43,7 @@ namespace Altruist {
         }
 
         public static void SetOwner(Item item, Item owner) {
-            item.owner = owner;
+            item.Owner = owner;
         }
 
         public static void SetName(Item item, string name) {

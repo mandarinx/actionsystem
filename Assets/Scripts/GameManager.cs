@@ -13,17 +13,11 @@ namespace RL {
         private IEnumerator Start() {
             yield return assets.Load();
             Game = new Game(assets);
-            Game.Draw(Game);
             UnityUpdate.Add(this);
         }
 
         public void OnUpdate(float dt) {
-            Game.Update(Game);
+            Game.Update();
         }
     }
-
-    // public class EntityConfig {
-    //     public string name;
-    //     public IAction[] actions;
-    // }
 }

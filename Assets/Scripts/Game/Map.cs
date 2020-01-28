@@ -1,13 +1,35 @@
+using System.Collections.Generic;
+using Altruist;
 using UnityEngine;
 
 namespace RL {
     
     public class Map {
 
-        public readonly int[] tiles;
+        public readonly int[] data;
+        
+        // Not the way to do it!
+        // The PositionSystem is the only system that should maintain positions.
+        // Maybe it's the positioning system that should get the layers?
+        // It could be beneficial to have layers in the map. Could use that for 
+        // parallaxing, roofs and whatnot.
+        // so the positioning system would be for Items only... That would make the
+        // code in Verbs clearer. First check for items in the possystem, then
+        // check for tiles in the map.
+        private readonly Dictionary<int, Item[]> layers = new Dictionary<int, Item[]>();
 
         public Map(int width, int height) {
-            tiles = new int[width * height];
+            data = new int[width * height];
+            AddLayer(layers, 0, width, height);
+            AddLayer(layers, 1, width, height);
+        }
+
+        private static void AddLayer(Dictionary<int, Item[]> layerTable, int layerNum, int width, int height) {
+            layerTable.Add(layerNum, new Item[width * height]);
+        }
+
+        public static Item[] GetLayer(Map map, int layer) {
+            return map.layers[layer];
         }
         
         public static void CreateRoom(Map map, Vector2Int bottomLeft, int width, int height) {
@@ -32,7 +54,7 @@ namespace RL {
                 Vector2Int coord = GetCoord(i, rect.width).map;
                 int index = GetIndex(rect.x + coord.x, rect.y + coord.y);
                 // Debug.Log($"Coord: {coord} index: {index}");
-                map.tiles[index] = tile;
+                map.data[index] = tile;
             }
         }
 
@@ -55,16 +77,40 @@ namespace RL {
                                top - bottom);
         }
 
+        public static Item GetItem(Map map, Coord coord, int layer) {
+            return map.layers[layer][coord.index];
+        }
+
+        public static void AddItem(Map map, Item item, Coord coord, int layer) {
+            Item other = GetItem(map, coord, layer);
+            if (other != null) {
+                Debug.Log($"Cannot add Item {item.name} to layer {layer} at coord {coord} because Item {other.name} is already there");
+                return;
+            }
+            map.layers[layer][coord.index] = item;
+            Item.SetSortingOrder(item, layer);
+            PositionSystem.Set(item, coord);
+            Item.SetLocalPosition(item, coord.world);
+        }
+
+        public static int GetData(Map map, Coord coord) {
+            return map.data[coord.index];
+        }
+        
         public static int GetIndex(int x, int y) {
             return y * CFG.MAP_WIDTH + x;
         }
 
-        public static int GetIndex(Vector2Int coord) {
-            return GetIndex(coord.x, coord.y);
+        public static int GetIndex(Coord coord) {
+            return GetIndex(coord.map.x, coord.map.y);
         }
 
-        public static Vector2Int GetCoord(Vector3 worldPos, int width, int height) {
-            return new Vector2Int(Mathf.Clamp(Mathf.FloorToInt(worldPos.x), 0, width - 1), 
+        public static Coord GetCoord(Vector3 worldPos, int width, int height) {
+            return new Coord(GetMapCoord(worldPos, width, height));
+        }
+
+        public static Vector2Int GetMapCoord(Vector3 worldPos, int width, int height) {
+            return new Vector2Int(Mathf.Clamp(Mathf.FloorToInt(worldPos.x), 0, width - 1),
                                   Mathf.Clamp(Mathf.FloorToInt(worldPos.y), 0, height - 1));
         }
 
@@ -76,9 +122,12 @@ namespace RL {
         public static Vector3 GetWorldCoord(Vector2Int mapCoord) {
             return new Vector3(mapCoord.x, mapCoord.y, 0f);
         }
-        
-        public static int GetTile(Map map, int i) {
-            return map.tiles[i];
+
+        public static bool IsWalkable(Map map, Coord coord) {
+            if (GetItem(map, coord, CFG.LAYER_1)) {
+                return false;
+            }
+            return map.data[coord.index] == CFG.TT_FLOOR;
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 
 namespace Altruist {
 

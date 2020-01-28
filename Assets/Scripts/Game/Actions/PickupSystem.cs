@@ -12,8 +12,8 @@ namespace RL {
 
         public Type TargetProperty => typeof(PropWeight);
 
-        public IEnumerator Resolve(Item source, IAction sourceAction, Item target, IProperty targetProp) {
-            PropWeight propWeight = (PropWeight) targetProp;
+        public IEnumerator Resolve(Item source, IAction sourceAction, Item target, Bridge bridge) {
+            PropWeight propWeight = Property.Get<PropWeight>(target);
             
             int strength = 0;
             if (ItemDataSystem.Get(source, out ItemData itemData)) {
@@ -24,7 +24,8 @@ namespace RL {
                 Debug.Log($"{source.name} could not pick up {target.name}. It's too heavy!");
                 yield break;
             }
-            
+
+            // Inventory.Remove(target.Owner.Items, target);
             Inventory.Add(source.Items, target);
             Item.Disable(target);
             Debug.Log($"{source.name} picked up {target.name}");

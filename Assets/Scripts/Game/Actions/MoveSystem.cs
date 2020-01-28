@@ -12,8 +12,9 @@ namespace RL {
 
         public Type TargetProperty => typeof(PropPosition);
 
-        public IEnumerator Resolve(Item source, IAction sourceAction, Item target, IProperty targetProp) {
+        public IEnumerator Resolve(Item source, IAction sourceAction, Item target, Bridge bridge) {
             PropPosition propPos = Property.Get<PropPosition>(source);
+            Coord startCoord = PropPosition.GetCoord(propPos);
             Vector3 start = source.transform.position;
             Vector3 end = target.transform.position;
             Vector3 dir = end - start;
@@ -30,6 +31,8 @@ namespace RL {
             
             source.transform.position = end;
             PropPosition.SetWorldPos(propPos, end);
+            
+            Debug.Log($"{source.name} moved from {startCoord.map} to {PropPosition.GetCoord(propPos).map}");
         }
     }
 }

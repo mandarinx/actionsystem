@@ -47,10 +47,6 @@ namespace RL {
             Coord swordCoord = new Coord(new Vector2Int(4, 3));
             Inventory.Add(MapRenderer.GetTile(mapRen, swordCoord).Items, sword);
 
-            Item gameOver = Factory.CreateItem("GameOver");
-            Property.Add<PropVoid>(gameOver);
-            Action.Add<GameOverAction>(gameOver);
-            Property.RegisterAddEvent<PropDead>(player, gameOver);
             
             Camera.main.transform.position = new Vector3(CFG.MAP_WIDTH  * 0.5f,
                                                          CFG.MAP_HEIGHT * 0.5f,

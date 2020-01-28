@@ -5,7 +5,7 @@ namespace Altruist {
 
     public static class Property {
         
-        private static readonly PropertyEvents events = new PropertyEvents();
+        // private static readonly PropertyEvents events = new PropertyEvents();
 
         public static T Add<T>(Item item) where T : Component, IProperty {
             T prop = item.GetComponent<T>();
@@ -14,7 +14,7 @@ namespace Altruist {
             }
             prop = item.gameObject.AddComponent<T>();
             // Debug.Log($"Added property {typeof(T)} to {item.name}");
-            PropertyEvents.DispatchAddEvents(events, item, prop);
+            // PropertyEvents.DispatchAddEvents(events, item, prop);
             return prop;
         }
 
@@ -41,8 +41,8 @@ namespace Altruist {
             return types;
         }
 
-        public static void RegisterAddEvent<T>(Item source, Item handler) where T : Component, IProperty {
-            PropertyEvents.RegisterAddEvent<T>(events, source, handler);
-        }
+        // public static void RegisterAddEvent<T>(Item source, Item handler) where T : Component, IProperty {
+        //     PropertyEvents.RegisterAddEvent<T>(events, source, handler);
+        // }
     }
 }

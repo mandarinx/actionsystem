@@ -8,7 +8,7 @@ namespace RL {
 
         public const string PPKEY_DRAW_GRID = "dbgDrawGrid";
 
-        public const int    E_PLAYER      = 1000;
+        public const int    EID_PLAYER      = 1000;
         public const string E_PLAYER_NAME = "Player";
 
         public const int TT_VOID  = 0;
@@ -64,7 +64,7 @@ namespace RL {
         // public static readonly Dictionary<int, Sprite> SPRITES_ENTITIES = new Dictionary<int, Sprite>();
         
         public static readonly Dictionary<int, string> ENTITY_NAMES = new Dictionary<int, string> {
-            { E_PLAYER, E_PLAYER_NAME }
+            { EID_PLAYER, E_PLAYER_NAME }
         };
 
         // public static readonly string[] ENTITIES = {
@@ -72,7 +72,7 @@ namespace RL {
         // };
 
         public static readonly int[] ENTITY_IDS = {
-            E_PLAYER,
+            EID_PLAYER,
         };
 
         // public static readonly string[] TILES_VOID = {

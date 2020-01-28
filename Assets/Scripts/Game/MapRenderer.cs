@@ -68,7 +68,7 @@ namespace RL {
         }
 
         public static void DrawPlayer(Dictionary<int, SpriteRenderer> sprites, int layer) {
-            sprites[CFG.E_PLAYER].sortingOrder = layer;
+            sprites[CFG.EID_PLAYER].sortingOrder = layer;
         }
 
         public static Item GetTile(MapRenderer mr, int index) {

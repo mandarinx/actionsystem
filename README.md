@@ -24,3 +24,13 @@ Can be solved using an energy system. Player spends x time, all npc's are added 
 The time it takes for the player to do an action, is the amount of time the npc's are given.
 
 - What about a wizard that needs to charge a spell before using it? He should probably make a decision first. Then wait for the time pool to accumulate. The AI could be given an option to cancel a decision and make a new one. Let's say the player manages to get up close to the wizard and starts attacking. The wizard should retreat. The AI needs to reevaluate the situation. Allthough, that can lead to dull enemies.
+
+## Animation system
+
+Animations are added to a list. After all actions are resolved, the animations are played in parallel. There are two lists, one for player actions, and one for all npc's. 
+
+For cases like when a melee attack kills an entity, one would usually like the death anim to play at the right time. A simple solution is to to make all attack animations reach the blow that kills at the same frame. And the death anim has to reach the hit at the same frame. They can last longer, but has to have to the impact on the same frame.
+
+Animations should be implemented as different types. That way each animation type can do custom things, like updating map lighting, playing sounds, playing keyframed animations, lerping and whatnot.
+
+What about when the players shoots an arrow, hurts an npc, and the npc runs off. The arrow should animate all the way to the noc, play the hit animation, and then let the npc run off. With this approach, it seems hard to make a system that doesn't end up as one that needs to handle all kinds of edge cases. The shoot arrow system should do just that, fire arrows. The list of npc animations might need to be multiple lists, one for each npc. Each list should be able to hold multiple animations. That will solve this problem. As long as the hurt animation is played before running off. Hurt is added by the health component as a reaction to the player shooting an arrow at the npc. The run off animation is added by the monster ai on the next turn, so it should be ok.

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Altruist {
+namespace RL {
 
     [AddComponentMenu("Item System/Inventory")]
     public class Inventory : MonoBehaviour {

@@ -1,4 +1,4 @@
 ﻿
-namespace Altruist {
+namespace RL {
     public interface IProperty {}
 }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
-using Altruist;
 using JetBrains.Annotations;
-using Action = Altruist.Action;
 
 namespace RL {
 
@@ -13,7 +10,7 @@ namespace RL {
 
         public Type TargetProperty => typeof(PropPushable);
 
-        public IEnumerator Resolve(Item source, IAction sourceAction, Item target, Bridge bridge) {
+        public void Resolve(Item source, IAction action, Item target) {
             
             // get direction
             // check if map coordinate at target pos + direction is free
@@ -30,15 +27,14 @@ namespace RL {
             Vector2Int pushTargetMapCoord = coordTarget.map + dir;
 
             Coord pushTargetCoord = new Coord(pushTargetMapCoord);
-            
-            Map map = bridge.Get<Map>();
-            if (!Map.IsWalkable(map, pushTargetCoord)) {
-                yield break;
-            }
 
-            ActionRunner runner = bridge.Get<ActionRunner>();
-            ActionSystem.Resolve(source, Action.Get<MoveAction>(source), target, runner);
-            ActionSystem.Resolve(target, Action.Get<MoveAction>(target), Map.GetItem(map, pushTargetCoord, CFG.LAYER_0), runner);
+            Map map = Game.Cur.map;
+            if (!Map.IsWalkable(map, pushTargetCoord)) {
+                return;
+            }
+            
+            ActionSystem.Resolve(source, Action.Get<MoveAction>(source), target);
+            ActionSystem.Resolve(target, Action.Get<MoveAction>(target), Map.GetItem(map, pushTargetCoord, CFG.LAYER_0));
         }
     }
 }

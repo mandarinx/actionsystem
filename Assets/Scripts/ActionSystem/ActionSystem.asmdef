@@ -1,5 +1,5 @@
 {
-    "name": "ItemSystem",
+    "name": "ActionSystem",
     "references": [
         "GUID:5dc56bc59793349cfb8fff0c2f84ecf4",
         "GUID:997ccfbc38c4f4f299dee5e0ed7060b8"
@@ -11,5 +11,6 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": []
+    "versionDefines": [],
+    "noEngineReferences": false
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Altruist {
+namespace RL {
     
     [AttributeUsage(AttributeTargets.Class)]
     public class ActionSystemAttribute : PropertyAttribute {

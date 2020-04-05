@@ -1,5 +1,4 @@
-﻿using Altruist;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace RL {
 

@@ -1,5 +1,4 @@
-﻿using Altruist;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace RL {
 
@@ -10,15 +9,16 @@ namespace RL {
         private readonly Item         player;
         private readonly Item         selection;
         private readonly Assets       assets;
-        private readonly ActionRunner actionRunnerPlayer;
-
+        
+        private static Game self;
+        public static Game Cur => self;
+        
         public Game(Assets assets) {
             this.assets = assets;
+            self = this;
             
             ActionSystem actionSys = new ActionSystem("RL");
             actionSys.RegisterSystems();
-
-            actionRunnerPlayer = ActionRunner.Create("ActionRunner_Player");
             
             map = new Map(CFG.MAP_WIDTH, CFG.MAP_HEIGHT);
             Map.CreateRoom(map, new Vector2Int(2, 2), 8, 6);
@@ -51,9 +51,6 @@ namespace RL {
             Item.SetLocalPosition(selection, selectionCoord.world);
             Item.SetSortingOrder(selection, 100);
 
-            actionSys.BridgeWith(map);
-            actionSys.BridgeWith(actionRunnerPlayer);
-            
             Camera.main.transform.position = new Vector3(CFG.MAP_WIDTH  * 0.5f,
                                                          CFG.MAP_HEIGHT * 0.5f,
                                                          -10.0f);
@@ -61,12 +58,41 @@ namespace RL {
 
         public void Update() {
 
-            while (actionRunnerPlayer.IsRunning) {
-                return;
-            }
+            // switch (state) {
+            // case GameState.PreRun:
+            // RunSystems();
+            // state = GameState.AwaitingPlayerInput;
+            // break;
+            
+            // case GameState.AwaitingPlayerInput:
+            // state = GetPlayerInput();
+            // break;
+            
+            // case GameState.PlayerTurn:
+            // RunSystems();
+            // break;
+            
+            // case GameState.MonsterTurn:
+            // RunSystems();
+            // break;
+            // }
+            // while (state == GameState.Init) {
+            // return;
+            // }
+            // while (state == GameState.Init) {
+            // return;
+            // }
+            
+            // while (!actionSystem.IsDone) {
+            // while (actionRunnerPlayer.IsRunning) {
+            //     return;
+            // }
             
             // while npc actions running
             // > return
+            
+            // while actionSequence.Count > 0
+                // return
 
             if (Property.Has<PropDead>(player)) {
                 Debug.Log("GAME OVER");
@@ -96,7 +122,13 @@ namespace RL {
             PositionSystem.Set("Selection", sc);
             Item.SetLocalPosition(selection, sc.world);
 
-            Verbs.Main(this, player, sc, actionRunnerPlayer);
+            Verbs.Main(this, player, sc);
+        }
+
+        private void RunSystems() {
+            // update visibility system
+            // update monster ai
+            // map indexing?
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Altruist {
+namespace RL {
 
-    public class Bridge {
+    public class Systems {
         private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
 
         public void Add(object service) {

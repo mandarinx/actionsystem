@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
-using Altruist;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace RL {
 
@@ -12,8 +9,7 @@ namespace RL {
 
         public Type TargetProperty => typeof(PropLock);
 
-        public IEnumerator Resolve(Item source, IAction sourceAction, Item target, Bridge bridge) {
-            yield break;
+        public void Resolve(Item source, IAction action, Item target) {
         }
     }
 }

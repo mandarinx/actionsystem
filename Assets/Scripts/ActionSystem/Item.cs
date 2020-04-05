@@ -1,7 +1,7 @@
 ﻿using Altruist.Core;
 using UnityEngine;
 
-namespace Altruist {
+namespace RL {
 
     [AddComponentMenu("Item System/Item")]
     public class Item : MonoBehaviour {

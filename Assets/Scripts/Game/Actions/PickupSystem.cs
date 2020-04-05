@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using Altruist;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -12,7 +10,7 @@ namespace RL {
 
         public Type TargetProperty => typeof(PropWeight);
 
-        public IEnumerator Resolve(Item source, IAction sourceAction, Item target, Bridge bridge) {
+        public void Resolve(Item source, IAction action, Item target) {
             PropWeight propWeight = Property.Get<PropWeight>(target);
             
             int strength = 0;
@@ -22,7 +20,7 @@ namespace RL {
 
             if (strength < propWeight.Weight) {
                 Debug.Log($"{source.name} could not pick up {target.name}. It's too heavy!");
-                yield break;
+                return;
             }
 
             // Inventory.Remove(target.Owner.Items, target);

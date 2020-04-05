@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-namespace Altruist {
+namespace RL {
 
     public static class Action {
 

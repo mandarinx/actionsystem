@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-namespace Altruist {
+namespace RL {
 
     [CustomEditor(typeof(Inventory))]
     public class InventoryInspector : Editor {

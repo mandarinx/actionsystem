@@ -1,11 +1,10 @@
-﻿using Altruist;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace RL {
 
     public static class Verbs {
 
-        public static void Main(Game game, Item player, Coord selCoord, ActionRunner runner) {
+        public static void Main(Game game, Item player, Coord selCoord) {
 
             if (!Input.GetKeyUp(KeyCode.Space)) {
                 return;
@@ -18,13 +17,13 @@ namespace RL {
                 Debug.Log("there is something on the floor");
                 
                 // Try to pick it up
-                if (Do<PickupAction>(player, target, runner)) {
+                if (Do<PickupAction>(player, target)) {
                     Debug.Log("its possible to pick up");
                     return;
                 }
 
                 // Try to push it
-                if (Do<PushAction>(player, target, runner)) {
+                if (Do<PushAction>(player, target)) {
                     Debug.Log("it can be pushed");
                     return;
                 }
@@ -36,8 +35,7 @@ namespace RL {
             
             if (Map.IsWalkable(game.map, selCoord)) {
                 MoveAction moveAction = Action.Get(player).Find<MoveAction>();
-                ActionSystem.Resolve(player, moveAction, target, runner);
-                runner.Start();
+                ActionSystem.Resolve(player, moveAction, target);
                 return;
             }
             
@@ -48,7 +46,7 @@ namespace RL {
             // > for each turn the player is in water.
         }
 
-        private static bool Do<T>(Item source, Item target, ActionRunner runner) where T : Component, IAction {
+        private static bool Do<T>(Item source, Item target) where T : Component, IAction {
             T action = Action.Get(source).Find<T>();
 
             if (action == null) {
@@ -59,8 +57,7 @@ namespace RL {
                 return false;
             }
             
-            ActionSystem.Resolve(source, action, target, runner);
-            runner.Start();
+            ActionSystem.Resolve(source, action, target);
             return true;
         }
     }

@@ -34,8 +34,11 @@ namespace RL {
             Debug.Log($"Tile {target.name} is {(Map.IsWalkable(game.map, selCoord) ? "walkable" : "blocked")}");
             
             if (Map.IsWalkable(game.map, selCoord)) {
-                MoveAction moveAction = Action.Get(player).Find<MoveAction>();
-                ActionSystem.Resolve(player, moveAction, target);
+                game.anim.DoMove(player.transform, 
+                                 player.transform.position,
+                                 target.transform.position);
+                // MoveAction moveAction = Action.Get(player).Find<MoveAction>();
+                // ActionSystem.Resolve(player, moveAction, target);
                 return;
             }
             
@@ -48,17 +51,7 @@ namespace RL {
 
         private static bool Do<T>(Item source, Item target) where T : Component, IAction {
             T action = Action.Get(source).Find<T>();
-
-            if (action == null) {
-                return false;
-            }
-
-            if (!ActionSystem.CanResolveFor(action, target)) {
-                return false;
-            }
-            
-            ActionSystem.Resolve(source, action, target);
-            return true;
+            return action != null && ActionSystem.Resolve(source, action, target);
         }
     }
 }

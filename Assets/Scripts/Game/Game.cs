@@ -3,24 +3,37 @@
 namespace RL {
 
     public class Game {
-        
-        public readonly Map map;
 
-        private readonly Item         player;
-        private readonly Item         selection;
-        private readonly Assets       assets;
+        public readonly Map        map;
+        public readonly AnimSystem anim;
+
+        private readonly Item      player;
+        private readonly Item      selection;
+        private readonly Assets    assets;
+        
+        private GameState state;
         
         private static Game self;
-        public static Game Cur => self;
         
         public Game(Assets assets) {
-            this.assets = assets;
             self = this;
+            this.assets = assets;
+
+            state = GameState.WARMUP;
+            
+            // Instantiate all systems necessary for other systems to function
+            anim = new AnimSystem();
+            map = new Map(CFG.MAP_WIDTH, CFG.MAP_HEIGHT);
             
             ActionSystem actionSys = new ActionSystem("RL");
+            actionSys.OnActionSystemAdded += actionSystem => {
+                IGameSystem gs = actionSys as IGameSystem;
+                if (gs != null) {
+                    gs.InitGame(this);
+                }
+            };
             actionSys.RegisterSystems();
             
-            map = new Map(CFG.MAP_WIDTH, CFG.MAP_HEIGHT);
             Map.CreateRoom(map, new Vector2Int(2, 2), 8, 6);
             MapRenderer.DrawLayer(map, CFG.LAYER_0, assets);
 
@@ -28,7 +41,6 @@ namespace RL {
             Item.SetSprite(player, Assets.GetEntity(assets, "Player"));
             Map.AddItem(map, player, new Coord(3, 3), CFG.LAYER_1);
             Action.Add<PickupAction>(player);
-            Action.Add<MoveAction>(player);
             Action.Add<PushAction>(player);
             ItemDataSystem.Set(player, new ItemData {
                 strength = 10
@@ -43,7 +55,6 @@ namespace RL {
             Item.SetSprite(crate, Assets.GetItem(assets, "Crate"));
             Map.AddItem(map, crate, new Coord(5, 4), CFG.LAYER_1);
             Property.Add<PropPushable>(crate);
-            Action.Add<MoveAction>(crate);
 
             selection = Factory.CreateItem("Selection");
             Item.SetSprite(selection, Assets.GetMisc(assets, "Selection"));
@@ -56,49 +67,53 @@ namespace RL {
                                                          -10.0f);
         }
 
-        public void Update() {
+        public GameState Update(float dt) {
 
-            // switch (state) {
-            // case GameState.PreRun:
-            // RunSystems();
-            // state = GameState.AwaitingPlayerInput;
-            // break;
+            switch (state) {
+            case GameState.UNDEFINED:
+            case GameState.WARMUP:
+                RunSystems();
+                state = GameState.AWAITING_PLAYER_INPUT;
+            break;
             
-            // case GameState.AwaitingPlayerInput:
-            // state = GetPlayerInput();
-            // break;
+            case GameState.AWAITING_PLAYER_INPUT:
+                UpdateSelection();
+                // get input command
+                // if no command, wait
+                // store input state
+                // store input command
+                // state = GameState.RESOLVE_ACTIONS;
+            break;
             
-            // case GameState.PlayerTurn:
-            // RunSystems();
-            // break;
+            case GameState.RESOLVE_ACTIONS:
+                // if left click mouse => walk
+                // if left click mouse + shift => sneak
+                // if right click mouse => resolve equipped actions with target item
+                // get spent energy from energy system
+                // make energy available for npcs
+                // run npc ai => decide what to do, resolve actions
+                // start animations
+                Verbs.Main(this, player, PositionSystem.Get("Selection"));
+                RunSystems();
+                state = GameState.PLAY_ANIMATIONS;
+            break;
             
-            // case GameState.MonsterTurn:
-            // RunSystems();
-            // break;
-            // }
-            // while (state == GameState.Init) {
-            // return;
-            // }
-            // while (state == GameState.Init) {
-            // return;
-            // }
-            
-            // while (!actionSystem.IsDone) {
-            // while (actionRunnerPlayer.IsRunning) {
-            //     return;
-            // }
-            
-            // while npc actions running
-            // > return
-            
-            // while actionSequence.Count > 0
-                // return
-
-            if (Property.Has<PropDead>(player)) {
-                Debug.Log("GAME OVER");
-                return;
+            case GameState.PLAY_ANIMATIONS:
+                // while animations are running => run systems
+                // when done => switch state
+                RunSystems();
+                state = GameState.AWAITING_PLAYER_INPUT;
+            break;
             }
 
+            if (Property.Has<PropDead>(player)) {
+                return GameState.GAME_OVER;
+            }
+
+            return state;
+        }
+
+        private void UpdateSelection() {
             Coord sc = PositionSystem.Get("Selection");
             Coord pc = PositionSystem.Get("Player");
             
@@ -121,13 +136,14 @@ namespace RL {
             
             PositionSystem.Set("Selection", sc);
             Item.SetLocalPosition(selection, sc.world);
-
-            Verbs.Main(this, player, sc);
         }
 
         private void RunSystems() {
-            // update visibility system
+            // update visibility
+            // action system player
             // update monster ai
+            // action system monsters
+            // play animations
             // map indexing?
         }
     }

@@ -1,14 +1,19 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using JetBrains.Annotations;
 
 namespace RL {
 
     [UsedImplicitly]
-    [ActionSystem(typeof(PushAction))]
-    public class PushSystem : IActionSystem {
+    [ActionSystem(typeof(PushAction), typeof(PropPushable))]
+    public class PushSystem : IActionSystem, IGameSystem {
 
-        public Type TargetProperty => typeof(PropPushable);
+        private AnimSystem anim;
+        private Map map;
+        
+        public void InitGame(Game game) {
+            anim = game.anim;
+            map = game.map;
+        }
 
         public void Resolve(Item source, IAction action, Item target) {
             
@@ -28,13 +33,18 @@ namespace RL {
 
             Coord pushTargetCoord = new Coord(pushTargetMapCoord);
 
-            Map map = Game.Cur.map;
             if (!Map.IsWalkable(map, pushTargetCoord)) {
                 return;
             }
             
-            ActionSystem.Resolve(source, Action.Get<MoveAction>(source), target);
-            ActionSystem.Resolve(target, Action.Get<MoveAction>(target), Map.GetItem(map, pushTargetCoord, CFG.LAYER_0));
+            anim.DoMove(source.transform, 
+                        source.transform.position, 
+                        target.transform.position);
+            anim.DoMove(target.transform, 
+                        target.transform.position, 
+                        Map.GetItem(map, pushTargetCoord, CFG.LAYER_0).transform.position);
+            // ActionSystem.Resolve(source, Action.Get<MoveAction>(source), target);
+            // ActionSystem.Resolve(target, Action.Get<MoveAction>(target), Map.GetItem(map, pushTargetCoord, CFG.LAYER_0));
         }
     }
 }

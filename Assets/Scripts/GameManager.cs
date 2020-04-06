@@ -17,7 +17,13 @@ namespace RL {
         }
 
         public void OnUpdate(float dt) {
-            Game.Update();
+            GameState gameState = Game.Update(dt);
+            if (gameState != GameState.GAME_OVER) {
+                return;
+            }
+            
+            Debug.Log("Game over");
+            UnityUpdate.Remove(this);
         }
     }
 }

@@ -1,13 +1,10 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RL {
 
     [UsedImplicitly]
-    [ActionSystem(typeof(OpenAction))]
+    [ActionSystem(typeof(OpenAction), typeof(PropLock))]
     public class OpenSystem : IActionSystem {
-
-        public Type TargetProperty => typeof(PropLock);
 
         public void Resolve(Item source, IAction action, Item target) {
         }

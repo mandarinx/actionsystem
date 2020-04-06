@@ -1,14 +1,11 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using UnityEngine;
 
 namespace RL {
 
     [UsedImplicitly]
-    [ActionSystem(typeof(PickupAction))]
+    [ActionSystem(typeof(PickupAction), typeof(PropWeight))]
     public class PickupSystem : IActionSystem {
-
-        public Type TargetProperty => typeof(PropWeight);
 
         public void Resolve(Item source, IAction action, Item target) {
             PropWeight propWeight = Property.Get<PropWeight>(target);

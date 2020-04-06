@@ -2,6 +2,17 @@
 
 Exploring ways to handle actions, verbs, properties and such in a roguelike game.
 
+# Challenges
+
+Stuff I'd like to try solving. The action system might not be the best solution for all of the challenges, but they will make me look at the architecture and API design from different perspectives.
+
+- Make something happen when a character steps on a tile.
+- Make a bomb go off when a character opens a chest.
+
+*Misc*
+
+- Can the target property type be moved to the attribute of the action system without messing up the code too much?
+
 # Notes
 
 ## Optimal play
@@ -34,3 +45,4 @@ For cases like when a melee attack kills an entity, one would usually like the d
 Animations should be implemented as different types. That way each animation type can do custom things, like updating map lighting, playing sounds, playing keyframed animations, lerping and whatnot.
 
 What about when the players shoots an arrow, hurts an npc, and the npc runs off. The arrow should animate all the way to the noc, play the hit animation, and then let the npc run off. With this approach, it seems hard to make a system that doesn't end up as one that needs to handle all kinds of edge cases. The shoot arrow system should do just that, fire arrows. The list of npc animations might need to be multiple lists, one for each npc. Each list should be able to hold multiple animations. That will solve this problem. As long as the hurt animation is played before running off. Hurt is added by the health component as a reaction to the player shooting an arrow at the npc. The run off animation is added by the monster ai on the next turn, so it should be ok.
+

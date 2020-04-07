@@ -4,31 +4,20 @@ using System.Collections.Generic;
 
 namespace RL {
 
-    // register an update handler to be able to pick up when anims are done
-    
     public class AnimSystem {
 
-        private          List<IEnumerator> animations = new List<IEnumerator>(1024);
+        private readonly List<IEnumerator> animations = new List<IEnumerator>(1024);
         private readonly AnimSystemRunner  runner;
-        
-        public bool IsRunning { get; }
-        
+
+        public bool IsRunning => runner != null && runner.IsRunning;
+
         public AnimSystem() {
             runner = new GameObject("AnimSystemRunner", typeof(AnimSystemRunner))
                .GetComponent<AnimSystemRunner>();
         }
 
         public void Run() {
-            // IsRunning = true;
-            // UnityUpdate.Add(this);
-            // runner.Run();
-        }
-
-        public void OnUpdate(float dt) {
-            // if (!runner.IsRunning) {
-            // UnityUpdate.Remove(this);
-            // IsRunning = false;
-            // }
+            runner.Run(animations);
         }
 
         public void DoMove(Transform transform, Vector3 fromPos, Vector3 toPos) {
@@ -51,5 +40,28 @@ namespace RL {
         }
     }
 
-    public class AnimSystemRunner : MonoBehaviour {}
+    public class AnimSystemRunner : MonoBehaviour {
+
+        public bool IsRunning { get; private set; }
+        private readonly List<Coroutine> coroutines = new List<Coroutine>();
+        
+        public void Run(List<IEnumerator> animations) {
+            IsRunning = true;
+            StartCoroutine(RunAnimations(animations));
+        }
+
+        private IEnumerator RunAnimations(List<IEnumerator> animations) {
+            coroutines.Clear();
+
+            for (int i = 0; i < animations.Count; ++i) {
+                coroutines.Add(StartCoroutine(animations[i]));
+            }
+
+            for (int i = 0; i < coroutines.Count; ++i) {
+                yield return coroutines[i];
+            }
+            
+            IsRunning = false;
+        }
+    }
 }

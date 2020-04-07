@@ -36,6 +36,7 @@ Can be solved using an energy system. Player spends x time, all npc's are added 
 The time it takes for the player to do an action, is the amount of time the npc's are given.
 
 - What about a wizard that needs to charge a spell before using it? He should probably make a decision first. Then wait for the time pool to accumulate. The AI could be given an option to cancel a decision and make a new one. Let's say the player manages to get up close to the wizard and starts attacking. The wizard should retreat. The AI needs to reevaluate the situation. Allthough, that can lead to dull enemies.
+- Each action has a cost. When player makes one or more actions, the total cost is summed. When the player is done, the sum is distributed to all npcs as a budget for them to spend on actions. That would result in a turn that always starts with player and ends with npcs, before restarting the next turn.
 
 ## Animation system
 

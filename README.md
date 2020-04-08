@@ -9,6 +9,7 @@ Stuff I'd like to try solving. The action system might not be the best solution 
 - Make something happen when a character steps on a tile.
 - Make a bomb go off when a character opens a chest.
 - Be able to define relationships between actions and properties in data.
+- Set duration of an action. Sleeping could take 3 turns. Leaves player vulnerable. Could be solved by a separate system for handling sleep. As long as the system is active, it simply reruns the same action.
 
 *Misc*
 

@@ -30,7 +30,7 @@ namespace RL {
             float   travel = 0f;
 
             while (travel < dist) {
-                Vector3 pos = fromPos + direction * travel;
+                Vector3 pos = fromPos + direction.normalized * travel;
                 transform.position = pos;
                 travel += Time.deltaTime * CFG.E_SPEED;
                 yield return null;

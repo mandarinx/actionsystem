@@ -1,13 +1,34 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace RL {
 
     public enum InputCommand {
         UNDEFINED = 0,
         WALK      = 10,
-        SNEAK     = 11,
-        RUN       = 12,
         INTERACT  = 1000,
+    }
+
+    [Flags]
+    public enum Dir {
+        NONE = 0,
+        N    = 1 << 0,
+        E    = 1 << 1,
+        S    = 1 << 2,
+        W    = 1 << 3,
+    }
+
+    [Flags]
+    public enum InputKey {
+        NONE      = 0,
+        PRIMARY   = 1 << 0,
+        SECONDARY = 1 << 1,
+    }
+
+    public struct InputState {
+        public Vector3  mousePos;
+        public InputKey key;
+        public Dir      direction;
     }
     
     public class Game {
@@ -86,8 +107,9 @@ namespace RL {
             break;
             
             case GameState.AWAITING_PLAYER_INPUT:
-                UpdateSelection();
-                if (!GetInput(out inputCmd)) {
+                InputState inputState = GetInputState();
+                UpdateSelection(inputState.mousePos);
+                if (!GetInputCmd(inputState, out inputCmd)) {
                     break;
                 }
                 Debug.Log($"GameState.AwaitingPlayerInput : Input command {inputCmd}");
@@ -97,12 +119,10 @@ namespace RL {
             case GameState.RESOLVE_ACTIONS:
                 switch (inputCmd) {
                 case InputCommand.WALK:
-                case InputCommand.SNEAK:
-                case InputCommand.RUN:
                     Debug.Log($"GameState.ResolveAction : Move");
                     anim.DoMove(player.transform, 
                                 player.transform.position,
-                                PositionSystem.Get("Selection").world);
+                                selection.transform.position);
                     break;
                 case InputCommand.INTERACT:
                     Debug.Log($"GameState.ResolveAction : Interact");
@@ -139,18 +159,31 @@ namespace RL {
             return state;
         }
 
-        private bool GetInput(out InputCommand cmd) {
-            if (Input.GetKeyUp(KeyCode.W)) {
-                if (Input.GetKeyUp(KeyCode.LeftShift)) {
-                    cmd = InputCommand.SNEAK;
-                    return true;
-                }
-                
+        private static InputState GetInputState() {
+            InputKey key = InputKey.NONE;
+            key |= Input.GetMouseButtonUp(0) ? InputKey.PRIMARY : InputKey.NONE;
+            key |= Input.GetMouseButtonUp(1) ? InputKey.SECONDARY : InputKey.NONE;
+
+            Dir dir = Dir.NONE;
+            dir |= Input.GetKeyUp(KeyCode.UpArrow) ? Dir.N : Dir.NONE;
+            dir |= Input.GetKeyUp(KeyCode.RightArrow) ? Dir.E : Dir.NONE;
+            dir |= Input.GetKeyUp(KeyCode.DownArrow) ? Dir.S : Dir.NONE;
+            dir |= Input.GetKeyUp(KeyCode.LeftArrow) ? Dir.W : Dir.NONE;
+
+            return new InputState {
+                mousePos  = Camera.main.ScreenToWorldPoint(Input.mousePosition),
+                key       = key,
+                direction = dir,
+            };
+        }
+
+        private static bool GetInputCmd(InputState inputState, out InputCommand cmd) {
+            if ((inputState.key & InputKey.PRIMARY) > 0) {
                 cmd = InputCommand.WALK;
                 return true;
             }
             
-            if (Input.GetKeyUp(KeyCode.E)) {
+            if ((inputState.key & InputKey.SECONDARY) > 0) {
                 cmd = InputCommand.INTERACT;
                 return true;
             }
@@ -159,29 +192,14 @@ namespace RL {
             return false;
         }
 
-        private void UpdateSelection() {
-            Coord sc = PositionSystem.Get("Selection");
-            Coord pc = PositionSystem.Get("Player");
-            
-            if (Input.GetKeyUp(KeyCode.UpArrow)
-                && sc.map.y <= pc.map.y) {
-                Coord.SetMapPosition(sc, pc.map + Vector2Int.up);
-            }
-            if (Input.GetKeyUp(KeyCode.DownArrow)
-                && sc.map.y >= pc.map.y) {
-                Coord.SetMapPosition(sc, pc.map + Vector2Int.down);
-            }
-            if (Input.GetKeyUp(KeyCode.LeftArrow)
-                && sc.map.x >= pc.map.x) {
-                Coord.SetMapPosition(sc, pc.map + Vector2Int.left);
-            }
-            if (Input.GetKeyUp(KeyCode.RightArrow)
-                && sc.map.x <= pc.map.x) {
-                Coord.SetMapPosition(sc, pc.map + Vector2Int.right);
-            }
-            
-            PositionSystem.Set("Selection", sc);
-            Item.SetLocalPosition(selection, sc.world);
+        // Replace with a mouse based positioning system.
+        // Selection is the tile selected by the mouse.
+        // The value is found in the input state struct.
+        // The position system is quite shit now. Review the code
+        // in the rust tutorial to get an idea of how to solve it.
+        private void UpdateSelection(Vector3 mousePos) {
+            Coord coord = new Coord(mousePos);
+            Item.SetLocalPosition(selection, new Vector3(coord.map.x, coord.map.y));
         }
 
         private void UpdateSystems() {

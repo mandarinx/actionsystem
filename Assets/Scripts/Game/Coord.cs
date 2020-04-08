@@ -13,6 +13,12 @@ namespace RL {
             index = Map.GetIndex(mapCoord.x, mapCoord.y);
         }
 
+        public Coord(Vector3 worldPos) {
+            map   = Map.GetMapCoord(worldPos, CFG.MAP_WIDTH, CFG.MAP_HEIGHT);
+            world = worldPos;
+            index = Map.GetIndex(map.x, map.y);
+        }
+
         public Coord(int mapx, int mapy) {
             map   = new Vector2Int(mapx, mapy);
             world = Map.GetWorldCoord(map);

@@ -10,9 +10,6 @@ namespace RL {
         public Inventory      Items      { get; private set; }
         public SpriteRenderer Visuals    { get; private set; }
 
-        [SerializeField, TextArea] private string tooltip = default;
-        public string Tooltip => tooltip;
-
         // When an Item is instantiated, it has no owner.
         // When it gets added to an Inventory, it will be owned
         // by the owner of the Inventory. An Inventory is always

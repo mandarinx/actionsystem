@@ -88,9 +88,9 @@ namespace RL {
                 return;
             }
             map.layers[layer][coord.index] = item;
-            Item.SetSortingOrder(item, layer);
+            item.SetSortingOrder(layer);
             PositionSystem.Set(item, coord);
-            Item.SetLocalPosition(item, coord.world);
+            item.SetLocalPosition(coord.world);
         }
 
         public static int GetData(Map map, Coord coord) {

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Altruist;
 
 namespace RL {
 
@@ -15,7 +14,7 @@ namespace RL {
             inventory.AddComponent<Inventory>();
             
             Item item = go.AddComponent<Item>();
-            Item.SetName(item, name);
+            item.SetName(name);
             ItemDataSystem.Set(item, new ItemData());
             
             Property.Add<PropPosition>(item);

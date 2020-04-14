@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Altruist.Core {
+namespace RL.Core {
 
     public static class T {
 

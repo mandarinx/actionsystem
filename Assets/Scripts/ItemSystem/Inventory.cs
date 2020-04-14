@@ -49,7 +49,7 @@ namespace RL {
                 return;
             }
             inventory.contents.Add(item);
-            Item.SetOwner(item, inventory.owner);
+            item.Owner = inventory.owner;
             item.transform.SetParent(inventory.transform, false);
         }
 

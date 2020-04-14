@@ -1,6 +1,4 @@
-﻿using Altruist;
-
-namespace RL {
+﻿namespace RL {
 
     public static class MapRenderer {
 
@@ -9,9 +7,9 @@ namespace RL {
             for (int i = 0; i < layer.Length; ++i) {
                 Coord coord = Map.GetCoord(i, CFG.MAP_WIDTH);
                 layer[i] = Factory.CreateItem($"{coord.map.x}_{coord.map.y}");
-                Item.SetLocalPosition(layer[i], coord.world);
+                layer[i].SetLocalPosition(coord.world);
                 SetTile(layer, layerIndex, map.data, i, assets);
-                Item.SetSortingOrder(layer[i], layerIndex);
+                layer[i].SetSortingOrder(layerIndex);
             }
         }
         
@@ -20,7 +18,7 @@ namespace RL {
 
             switch (tileType) {
             case CFG.TT_FLOOR:
-                Item.SetSprite(layer[dataIndex], Assets.GetRandomFloor(assets));
+                layer[dataIndex].SetSprite(Assets.GetRandomFloor(assets));
                 break;
             
             case CFG.TT_WALL:
@@ -51,11 +49,11 @@ namespace RL {
                 }
                 
                 //Debug.Log($"Tile {dataIndex:00} flag: {Utils.PrintInt32(flag)}");
-                Item.SetSprite(layer[dataIndex], Assets.GetWall(assets, CFG.WALL_MAP[flag]));
+                layer[dataIndex].SetSprite(Assets.GetWall(assets, CFG.WALL_MAP[flag]));
                 break;
 
             default:
-                Item.SetSprite(layer[dataIndex], Assets.GetMisc(assets, "Blank"));
+                layer[dataIndex].SetSprite(Assets.GetMisc(assets, "Blank"));
                 break;
             }
         }

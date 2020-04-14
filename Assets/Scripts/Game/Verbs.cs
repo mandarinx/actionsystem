@@ -50,7 +50,7 @@ namespace RL {
         }
 
         private static bool Do<T>(Item source, Item target) where T : Component, IAction {
-            T action = Action.Get(source).Find<T>();
+            T action = source.GetAction<T>();
             return action != null && ActionSystem.Resolve(source, action, target);
         }
     }

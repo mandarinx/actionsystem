@@ -22,7 +22,7 @@ namespace RL {
 
             // Inventory.Remove(target.Owner.Items, target);
             Inventory.Add(source.Items, target);
-            Item.Disable(target);
+            target.Disable();
             Debug.Log($"{source.name} picked up {target.name}");
         }
     }

@@ -1,6 +1,4 @@
-﻿using Altruist;
-
-namespace RL {
+﻿namespace RL {
 
     public static class ArrayExtensions {
 

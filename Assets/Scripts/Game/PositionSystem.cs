@@ -13,7 +13,7 @@ namespace RL {
 
         public static Coord Get(string name, Vector2Int defaultValue = default) {
             if (!coords.ContainsKey(name)) {
-                coords[name] = new Coord(defaultValue);
+                // coords[name] = new Coord(defaultValue);
             }
             return coords[name];
         }
@@ -31,7 +31,7 @@ namespace RL {
 
         public static void SetWorldPos(string name, Vector3 worldPos) {
             if (coords.TryGetValue(name, out Coord coord)) {
-                Coord.SetWorldPosition(coord, worldPos);
+                // Coord.SetWorldPosition(coord, worldPos);
             }
         }
     }

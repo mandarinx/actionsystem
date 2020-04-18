@@ -11,36 +11,36 @@ namespace RL {
             }
 
             // Is there an Item on the floor?
-            Item target = Map.GetItem(game.map, selCoord, CFG.LAYER_1);
-            if (target != null) {
-             
-                Debug.Log("there is something on the floor");
-                
-                // Try to pick it up
-                if (Do<PickupAction>(player, target)) {
-                    Debug.Log("its possible to pick up");
-                    return;
-                }
-
-                // Try to push it
-                if (Do<PushAction>(player, target)) {
-                    Debug.Log("it can be pushed");
-                    return;
-                }
-            }
+            // Item target = Map.GetItem(game.map, selCoord, CFG.LAYER_1);
+            // if (target != null) {
+            //  
+            //     Debug.Log("there is something on the floor");
+            //     
+            //     // Try to pick it up
+            //     if (Do<PickupAction>(player, target)) {
+            //         Debug.Log("its possible to pick up");
+            //         return;
+            //     }
+            //
+            //     // Try to push it
+            //     if (Do<PushAction>(player, target)) {
+            //         Debug.Log("it can be pushed");
+            //         return;
+            //     }
+            // }
 
             // Get the floor tile
-            target = Map.GetItem(game.map, selCoord, CFG.LAYER_0);
-            Debug.Log($"Tile {target.name} is {(Map.IsWalkable(game.map, selCoord) ? "walkable" : "blocked")}");
-            
-            if (Map.IsWalkable(game.map, selCoord)) {
-                game.anim.DoMove(player.transform, 
-                                 player.transform.position,
-                                 target.transform.position);
-                // MoveAction moveAction = Action.Get(player).Find<MoveAction>();
-                // ActionSystem.Resolve(player, moveAction, target);
-                return;
-            }
+            // target = Map.GetItem(game.map, selCoord, CFG.LAYER_0);
+            // Debug.Log($"Tile {target.name} is {(Map.IsWalkable(game.map, selCoord) ? "walkable" : "blocked")}");
+            //
+            // if (Map.IsWalkable(game.map, selCoord)) {
+            //     game.anim.DoMove(player.transform, 
+            //                      player.transform.position,
+            //                      target.transform.position);
+            //     // MoveAction moveAction = Action.Get(player).Find<MoveAction>();
+            //     // ActionSystem.Resolve(player, moveAction, target);
+            //     return;
+            // }
             
             // else if player has the means to break through a non-walkable tile
             

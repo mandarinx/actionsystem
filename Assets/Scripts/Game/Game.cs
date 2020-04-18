@@ -33,7 +33,7 @@ namespace RL {
     
     public class Game {
 
-        public readonly Map            map;
+        public readonly MapSystem      map;
         public readonly AnimSystem     anim;
         public readonly MovementSystem move;
 
@@ -46,7 +46,7 @@ namespace RL {
         
         private static Game self;
         
-        public Game(Assets assets) {
+        public Game(Config config, Assets assets) {
             self = this;
             this.assets = assets;
 
@@ -55,7 +55,7 @@ namespace RL {
             // Instantiate all systems necessary for other systems to function
             anim = new AnimSystem();
             move = new MovementSystem();
-            map = new Map(CFG.MAP_WIDTH, CFG.MAP_HEIGHT);
+            map = new MapSystem(config.map, config.tilemaps);
             
             ActionSystem actionSys = new ActionSystem("RL");
             actionSys.OnActionSystemAdded += iActionSystem => {
@@ -65,12 +65,12 @@ namespace RL {
             };
             actionSys.RegisterSystems();
             
-            Map.CreateRoom(map, new Vector2Int(2, 2), 8, 6);
-            MapRenderer.DrawLayer(map, CFG.LAYER_0, assets);
+            // Map.CreateRoom(map, new Vector2Int(2, 2), 8, 6);
+            // MapRenderer.DrawLayer(map, CFG.LAYER_0, assets);
 
             player = Factory.CreateItem("Player");
             player.SetSprite(Assets.GetEntity(assets, "Player"));
-            Map.AddItem(map, player, new Coord(3, 3), CFG.LAYER_1);
+            // Map.AddItem(map, player, new Coord(3, 3), CFG.LAYER_1);
             player.AddAction<PickupAction>();
             player.AddAction<PushAction>();
             ItemDataSystem.Set(player, new ItemData {
@@ -80,22 +80,22 @@ namespace RL {
             Item sword = Factory.CreateItem("Sword");
             sword.SetSprite(Assets.GetItem(assets, "Sword"));
             Property.Add<PropWeight>(sword);
-            Map.AddItem(map, sword, new Coord(new Vector2Int(4, 3)), CFG.LAYER_1);
+            // Map.AddItem(map, sword, new Coord(new Vector2Int(4, 3)), CFG.LAYER_1);
 
             Item crate = Factory.CreateItem("Crate");
             crate.SetSprite(Assets.GetItem(assets, "Crate"));
-            Map.AddItem(map, crate, new Coord(5, 4), CFG.LAYER_1);
+            // Map.AddItem(map, crate, new Coord(5, 4), CFG.LAYER_1);
             Property.Add<PropPushable>(crate);
 
             selection = Factory.CreateItem("Selection");
             selection.SetSprite(Assets.GetMisc(assets, "Selection"));
             Coord selectionCoord = PositionSystem.Get("Selection", new Vector2Int(3, 3));
-            selection.SetLocalPosition(selectionCoord.world);
+            // selection.SetLocalPosition(selectionCoord.world);
             selection.SetSortingOrder(100);
 
-            Camera.main.transform.position = new Vector3(CFG.MAP_WIDTH  * 0.5f,
-                                                         CFG.MAP_HEIGHT * 0.5f,
-                                                         -10.0f);
+            // Camera.main.transform.position = new Vector3(CFG.MAP_WIDTH  * 0.5f,
+                                                         // CFG.MAP_HEIGHT * 0.5f,
+                                                         // -10.0f);
         }
 
         public GameState Update(float dt) {
@@ -201,8 +201,8 @@ namespace RL {
         // The position system is quite shit now. Review the code
         // in the rust tutorial to get an idea of how to solve it.
         private void UpdateSelection(Vector3 mousePos) {
-            Coord coord = new Coord(mousePos);
-            selection.SetLocalPosition(new Vector3(coord.map.x, coord.map.y));
+            // Coord coord = new Coord(mousePos);
+            // selection.SetLocalPosition(new Vector3(coord.map.x, coord.map.y));
         }
 
         private void UpdateSystems() {

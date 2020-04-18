@@ -1,0 +1,24 @@
+{
+    "map":
+    {
+        "groups": ["wall", "ground"],
+        "themes": ["brick", "floor"]
+    },
+    "tilemaps": [
+    {
+        "tiling": "autotile",
+        "group": "wall",
+        "theme": "brick",
+        "walkable": ""
+    },
+    {
+        "tiling": "random",
+        "group": "floor",
+        "theme": "stone",
+        "walkable": "",
+        "tilenames": [
+            "Slabs",
+            "Tiles"
+        ]
+    }]
+}

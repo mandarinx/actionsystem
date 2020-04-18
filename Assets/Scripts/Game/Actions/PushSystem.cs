@@ -12,7 +12,7 @@ namespace RL {
         
         public void InitGame(Game game) {
             anim = game.anim;
-            map = game.map;
+            // map = game.map;
         }
 
         public void Resolve(Item source, IAction action, Item target) {
@@ -28,21 +28,21 @@ namespace RL {
             Coord coordSource = PropPosition.GetCoord(posSource);
             Coord coordTarget = PropPosition.GetCoord(posTarget);
             
-            Vector2Int dir = coordTarget.map - coordSource.map;
-            Vector2Int pushTargetMapCoord = coordTarget.map + dir;
+            // Vector2Int dir = coordTarget.map - coordSource.map;
+            // Vector2Int pushTargetMapCoord = coordTarget.map + dir;
 
-            Coord pushTargetCoord = new Coord(pushTargetMapCoord);
+            // Coord pushTargetCoord = new Coord(pushTargetMapCoord);
 
-            if (!Map.IsWalkable(map, pushTargetCoord)) {
-                return;
-            }
+            // if (!Map.IsWalkable(map, pushTargetCoord)) {
+                // return;
+            // }
             
             anim.DoMove(source.transform, 
                         source.transform.position, 
                         target.transform.position);
-            anim.DoMove(target.transform, 
-                        target.transform.position, 
-                        Map.GetItem(map, pushTargetCoord, CFG.LAYER_0).transform.position);
+            // anim.DoMove(target.transform, 
+                        // target.transform.position, 
+                        // Map.GetItem(map, pushTargetCoord, CFG.LAYER_0).transform.position);
             // ActionSystem.Resolve(source, Action.Get<MoveAction>(source), target);
             // ActionSystem.Resolve(target, Action.Get<MoveAction>(target), Map.GetItem(map, pushTargetCoord, CFG.LAYER_0));
         }

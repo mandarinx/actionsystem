@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace RL {
     public static class CFG {
-        public const int MAP_WIDTH  = 16;
-        public const int MAP_HEIGHT = 10;
+        // public const int MAP_WIDTH  = 16;
+        // public const int MAP_HEIGHT = 10;
 
         public const int LAYER_0 = 0;
         public const int LAYER_1 = 1;
@@ -15,27 +15,40 @@ namespace RL {
         public const int    EID_PLAYER      = 1000;
         public const string E_PLAYER_NAME = "Player";
 
+        // tile types
+        // reserve some bits for tile group, some for theme/variation, maybe some for meta data
+        // Group
+        // 9 bits for group = 512 groups.
+        // A group is like wall, floor, ground, etc
+        // Theme/variation
+        // 9 bits for theme = 512 themes.
+        // Theme is used for variation of group. Wooden (wall), stone (floor), metal (wall/floor),
+        // dry (grass), wet (grass, floor), icy (water, grass), lava (stone), etc
+        // Meta data
+        // 14 bits for meta data = 16.384 bits
+        // Reserved for what ever extra data. Whether a tile is walkable, what traverse cost it has, etc
+        
         public const int TT_VOID  = 0;
         public const int TT_FLOOR = 1;
         public const int TT_WALL  = 2;
         
         public static readonly Dictionary<int, string> WALL_MAP = new Dictionary<int, string> {
-            { 0,  "WallOrphan" },
-            { 1,  "WallW" },
-            { 2,  "WallS" },
-            { 3,  "WallSW" },
-            { 4,  "WallE" },
-            { 5,  "WallH" },
-            { 6,  "WallES" },
-            { 7,  "WallTS" },
-            { 8,  "WallN" },
-            { 9,  "WallNW" },
-            { 10, "WallV" },
-            { 11, "WallTW" },
-            { 12, "WallNE" },
-            { 13, "WallTN" },
-            { 14, "WallTE" },
-            { 15, "WallX" },
+            { 0,  "Orphan" },
+            { 1,  "W" },
+            { 2,  "S" },
+            { 3,  "SW" },
+            { 4,  "E" },
+            { 5,  "H" },
+            { 6,  "ES" },
+            { 7,  "TS" },
+            { 8,  "N" },
+            { 9,  "NW" },
+            { 10, "V" },
+            { 11, "TW" },
+            { 12, "NE" },
+            { 13, "TN" },
+            { 14, "TE" },
+            { 15, "X" },
         };
         public const int T_BLANK       = 0;
         public const int T_FLOOR_SLABS = 0;

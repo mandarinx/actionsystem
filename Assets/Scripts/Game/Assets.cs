@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using Random = UnityEngine.Random;
 
 namespace RL {
 
@@ -37,16 +39,51 @@ namespace RL {
     public class Assets {
         private AssetGroup entities = new AssetGroup("entities");
         private AssetGroup items = new AssetGroup("items");
-        private AssetGroup floors = new AssetGroup("floors");
-        private AssetGroup walls = new AssetGroup("walls");
         private AssetGroup misc = new AssetGroup("misc");
 
-        public IEnumerator Load() {
+        public IEnumerator Load(TilemapConfig[] tilemapConfigs) {
+            for (int i = 0; i < tilemapConfigs.Length; ++i) {
+                yield return LoadTilemap(tilemapConfigs[i]);
+            }
             yield return entities.Load();
             yield return items.Load();
-            yield return walls.Load();
-            yield return floors.Load();
             yield return misc.Load();
+        }
+
+        private IEnumerator LoadTilemap(TilemapConfig config) {
+            List<AsyncOperationHandle<Sprite>> handles = new List<AsyncOperationHandle<Sprite>>();
+            string baseAddress = $"{Utils.Capitalize(config.@group)}/{Utils.Capitalize(config.theme)}";
+
+            switch (config.tilingMethod) {
+            case TilingMethod.AUTOTILE: {
+                config.tileIds = new int[16];
+                
+                for (int i = 0; i < 16; ++i) {
+                    string address = $"{baseAddress}/{CFG.WALL_MAP[i]}.png";
+                    handles.Add(Addressables.LoadAssetAsync<Sprite>(address));
+                }
+                break;
+            }
+            
+            case TilingMethod.RANDOM:
+            case TilingMethod.PERLINNOISE:
+            default:
+                for (int i = 0; i < config.tilenames.Length; ++i) {
+                    string address = $"{baseAddress}/{config.tilenames[i]}.png";
+                    handles.Add(Addressables.LoadAssetAsync<Sprite>(address));
+                }
+                break;
+            }
+
+            for (int i = 0; i < handles.Count; ++i) {
+                yield return handles[i];
+            }
+
+            for (int i = 0; i < handles.Count; ++i) {
+                Debug.Log($"Loaded {baseAddress}/{handles[i].Result.name}");
+                config.tileSprites.Add(i, handles[i].Result);
+                config.tileIds[i] = i;
+            }
         }
 
         public static Sprite GetEntity(Assets assets, string name) {
@@ -63,22 +100,6 @@ namespace RL {
 
         public static Sprite GetRandomItem(Assets assets) {
             return AssetGroup.GetRandom(assets.items);
-        }
-
-        public static Sprite GetWall(Assets assets, string name) {
-            return AssetGroup.Get(assets.walls, name);
-        }
-
-        public static Sprite GetRandomWall(Assets assets) {
-            return AssetGroup.GetRandom(assets.walls);
-        }
-
-        public static Sprite GetFloor(Assets assets, string name) {
-            return AssetGroup.Get(assets.floors, name);
-        }
-
-        public static Sprite GetRandomFloor(Assets assets) {
-            return AssetGroup.GetRandom(assets.floors);
         }
 
         public static Sprite GetMisc(Assets assets, string name) {

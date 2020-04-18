@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using AptGames;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace RL {
     
@@ -8,11 +10,16 @@ namespace RL {
         
         public Game Game { get; private set; }
 
-        private readonly Assets assets = new Assets();
-
         private IEnumerator Start() {
-            yield return assets.Load();
-            Game = new Game(assets);
+            AsyncOperationHandle<TextAsset> configHandle = Addressables.LoadAssetAsync<TextAsset>("config.txt");
+            yield return configHandle;
+            Config config = JsonUtility.FromJson<Config>(configHandle.Result.text);
+            Config.Parse(config);
+
+            Assets assets = new Assets();
+            yield return assets.Load(config.tilemaps);
+            
+            Game = new Game(config, assets);
             UnityUpdate.Add(this);
         }
 

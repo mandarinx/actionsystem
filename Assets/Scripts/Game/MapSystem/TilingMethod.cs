@@ -1,5 +1,5 @@
 ﻿
-namespace RL {
+namespace RL.Systems.Map {
 
     public enum TilingMethod {
         AUTOTILE    = 0,

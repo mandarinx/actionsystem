@@ -1,10 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Random = UnityEngine.Random;
+using RL.Systems.Map;
 
 namespace RL {
 
@@ -52,27 +52,26 @@ namespace RL {
 
         private IEnumerator LoadTilemap(TilemapConfig config) {
             List<AsyncOperationHandle<Sprite>> handles = new List<AsyncOperationHandle<Sprite>>();
-            string baseAddress = $"{Utils.Capitalize(config.@group)}/{Utils.Capitalize(config.theme)}";
+            string baseAddress = $"{Utils.Capitalize(config.groupName)}/{Utils.Capitalize(config.themeName)}";
 
             switch (config.tilingMethod) {
-            case TilingMethod.AUTOTILE: {
-                config.tileIds = new int[16];
+                case TilingMethod.AUTOTILE: {
+                    config.tileIds = new int[16];
+                    
+                    for (int i = 0; i < 16; ++i) {
+                        string address = $"{baseAddress}/{CFG.WALL_MAP[i]}.png";
+                        handles.Add(Addressables.LoadAssetAsync<Sprite>(address));
+                    }
+                    break;
+                }
                 
-                for (int i = 0; i < 16; ++i) {
-                    string address = $"{baseAddress}/{CFG.WALL_MAP[i]}.png";
-                    handles.Add(Addressables.LoadAssetAsync<Sprite>(address));
-                }
-                break;
-            }
-            
-            case TilingMethod.RANDOM:
-            case TilingMethod.PERLINNOISE:
-            default:
-                for (int i = 0; i < config.tilenames.Length; ++i) {
-                    string address = $"{baseAddress}/{config.tilenames[i]}.png";
-                    handles.Add(Addressables.LoadAssetAsync<Sprite>(address));
-                }
-                break;
+                case TilingMethod.RANDOM:
+                case TilingMethod.PERLINNOISE:
+                    for (int i = 0; i < config.tilenames.Length; ++i) {
+                        string address = $"{baseAddress}/{config.tilenames[i]}.png";
+                        handles.Add(Addressables.LoadAssetAsync<Sprite>(address));
+                    }
+                    break;
             }
 
             for (int i = 0; i < handles.Count; ++i) {

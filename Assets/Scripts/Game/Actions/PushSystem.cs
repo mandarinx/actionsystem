@@ -8,7 +8,7 @@ namespace RL {
     public class PushSystem : IActionSystem, IGameSystem {
 
         private AnimSystem anim;
-        private Map map;
+        // private Map map;
         
         public void InitGame(Game game) {
             anim = game.anim;

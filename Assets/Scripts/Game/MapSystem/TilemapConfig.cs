@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RL {
+namespace RL.Systems.Map {
 
     [Serializable]
     public class TilemapConfig {
 
         [SerializeField] private string       tiling;
         [NonSerialized]  public  TilingMethod tilingMethod;
-        
-        public string   group;        // Hash to int
-        public string   theme;        // Hash to int
-        public string   walkable;     // Parse as int
+
+        [SerializeField] public string groupName;
+        [NonSerialized]  public Group  group;
+        [SerializeField] public string themeName;
+        [NonSerialized]  public Theme  theme;
 
         [SerializeField] public string[]                tilenames = new string[0];
         [NonSerialized]  public Dictionary<int, Sprite> tileSprites;
@@ -20,9 +21,16 @@ namespace RL {
 
         public static void Parse(TilemapConfig cfg) {
             cfg.tilingMethod = (TilingMethod) Enum.Parse(typeof(TilingMethod),
-                                                         cfg.tiling.ToUpper());
+                                                         cfg.tiling,
+                                                         ignoreCase: true);
             cfg.tileIds     = new int[cfg.tilenames.Length];
             cfg.tileSprites = new Dictionary<int, Sprite>();
+            cfg.group = (Group) Enum.Parse(typeof(Group),
+                                           cfg.groupName,
+                                           ignoreCase: true);
+            cfg.theme = (Theme) Enum.Parse(typeof(Theme),
+                                           cfg.themeName,
+                                           ignoreCase: true);
         }
     }
 }

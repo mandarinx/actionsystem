@@ -1,4 +1,5 @@
 ﻿using System;
+using RL.Systems.Map;
 using UnityEngine;
 
 namespace RL {
@@ -65,6 +66,7 @@ namespace RL {
             };
             actionSys.RegisterSystems();
             
+            // map.Load();
             // Map.CreateRoom(map, new Vector2Int(2, 2), 8, 6);
             // MapRenderer.DrawLayer(map, CFG.LAYER_0, assets);
 

@@ -1,41 +1,45 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace RL {
+namespace RL.Systems.Map {
 
     public class MapRenderer {
 
-        // accept parsed tilemap configs
-        public MapRenderer() {
-            
-        }
-
-        // accept map
-        public void Draw() {
-            // iterate tiles, do stuff
-        }
-
-        public void AutoTile(Map                     map,
-                             Dictionary<int, Sprite> tilemap,
-                             Dictionary<int, Sprite> tiles) {
-
-            for (int i = 0; i < map.Length; ++i) {
-                // get tile data at i
-                // if tile type is wall
-                // > look for neighbours of same type at NESW
-                // > calculate wall index
-                // if tile type is floor, water, grass ...
-                // > pick a random sprite
-                
-                // get tile data
-                // get tile group from data
-                // lookup a tilemap from the dictionary using the tile group as key
-                // get neighbours of same type
-                // calculate tile value from neighbours
-                // pass tile value to tilemap to get a sprite
-                // add sprite to tiles dictionary at tile index
+        private readonly Dictionary<Group, TilemapConfig> tilemapConfigs;
+        
+        public MapRenderer(TilemapConfig[] tilemapConfigs) {
+            this.tilemapConfigs = new Dictionary<Group, TilemapConfig>();
+            for (int i = 0; i < tilemapConfigs.Length; ++i) {
+                this.tilemapConfigs.Add(tilemapConfigs[i].group, tilemapConfigs[i]);
             }
         }
+
+        public void Draw(Map map) {
+            for (int i = 0; i < map.Length; ++i) {
+                if (!map.TryGetTile(i, out int tile)) {
+                    continue;
+                }
+
+                Group group = Map.GetGroup(tile);
+                TilemapConfig tilemapConfig = tilemapConfigs[group];
+                Sprite sprite;
+                
+                switch (tilemapConfig.tilingMethod) {
+                    case TilingMethod.AUTOTILE:
+                        sprite = TilingMethods.Autotile(map, i, group, tilemapConfig);
+                        break;
+                    default:
+                        //sprite = sprite for missing graphics? or just a blank one?
+                        break;
+                }
+
+                // create gameobject
+                // position at ...
+                // Map.IndexToWorldPos(i)
+                // set sprite on sprite renderer
+            }
+        }
+
         // public static void DrawLayer(Map map, int layerIndex, Assets assets) {
         //     Item[] layer = Map.GetLayer(map, layerIndex);
         //     for (int i = 0; i < layer.Length; ++i) {

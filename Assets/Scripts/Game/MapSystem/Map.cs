@@ -1,10 +1,16 @@
 using System;
-using System.Collections.Generic;
-using UnityEngine;
 
-namespace RL {
+namespace RL.Systems.Map {
     
     public class Map {
+
+        public const int MASK_GROUP = 0xFF; // 255
+        public const int MASK_THEME = 0xFF; // 255
+
+        public const int MASK_N = 1 << 3;
+        public const int MASK_E = 1 << 2;
+        public const int MASK_S = 1 << 1;
+        public const int MASK_W = 1 << 0;
 
         private int width;
         // the data array represents a layer. Could be extended with
@@ -19,8 +25,31 @@ namespace RL {
             Array.Copy(data, this.data, data.Length);
             this.width = width;
         }
-        
-        
+
+        public bool TryGetTile(int i, out int tile) {
+            bool valid = i >= 0 && i < Length;
+            tile = valid ? data[i] : -1;
+            return valid;
+        }
+
+        public bool TryGetTile(int i, Group group, out int tile) {
+            if (!HasTile(i, group)) {
+                tile = -1;
+                return false;
+            }
+            
+            tile = data[i];
+            return true;
+        }
+
+        public bool HasTile(int i, Group group) {
+            return (i >= 0 && i < Length) 
+                   && GetGroup(data[i]) != group;
+        }
+
+        public static Group GetGroup(int data) {
+            return (Group)(data & MASK_GROUP);
+        }
         
         // methods for converting world pos to tile pos, tile index
         

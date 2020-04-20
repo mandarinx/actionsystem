@@ -11,7 +11,7 @@ namespace RL {
     public class AssetGroup {
 
         private readonly string                     assetLabel;
-        private readonly Dictionary<string, Sprite> map  = new Dictionary<string, Sprite>();
+        private readonly Dictionary<string, Sprite> table = new Dictionary<string, Sprite>();
         private readonly List<Sprite>               list = new List<Sprite>();
         
         public AssetGroup(string label) {
@@ -22,13 +22,13 @@ namespace RL {
             AsyncOperationHandle<IList<Sprite>> handle = Addressables.LoadAssetsAsync<Sprite>(assetLabel, null);
             yield return handle;
             for (int n = 0; n < handle.Result.Count; ++n) {
-                map.Add(handle.Result[n].name, handle.Result[n]);
+                table.Add(handle.Result[n].name, handle.Result[n]);
                 list.Add(handle.Result[n]);
             }
         }
 
         public static Sprite Get(AssetGroup group, string name) {
-            return group.map[name];
+            return group.table[name];
         }
 
         public static Sprite GetRandom(AssetGroup group) {
@@ -52,7 +52,15 @@ namespace RL {
 
         private IEnumerator LoadTilemap(TilemapConfig config) {
             List<AsyncOperationHandle<Sprite>> handles = new List<AsyncOperationHandle<Sprite>>();
-            string baseAddress = $"{Utils.Capitalize(config.groupName)}/{Utils.Capitalize(config.themeName)}";
+            if (config.group == Group.None) {
+                Debug.LogError("Cannot load TilemapConfig without group name");
+                yield break;
+            }
+
+            string baseAddress = $"{Utils.Capitalize(config.groupName)}";
+            if (config.theme != Theme.None) {
+                baseAddress = $"{baseAddress}/{Utils.Capitalize(config.themeName)}";
+            }
 
             switch (config.tilingMethod) {
                 case TilingMethod.AUTOTILE: {
@@ -67,8 +75,8 @@ namespace RL {
                 
                 case TilingMethod.RANDOM:
                 case TilingMethod.PERLINNOISE:
-                    for (int i = 0; i < config.tilenames.Length; ++i) {
-                        string address = $"{baseAddress}/{config.tilenames[i]}.png";
+                    for (int i = 0; i < config.tileNames.Length; ++i) {
+                        string address = $"{baseAddress}/{config.tileNames[i]}.png";
                         handles.Add(Addressables.LoadAssetAsync<Sprite>(address));
                     }
                     break;

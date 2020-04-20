@@ -15,7 +15,7 @@ namespace RL.Systems.Map {
         [SerializeField] public string themeName;
         [NonSerialized]  public Theme  theme;
 
-        [SerializeField] public string[]                tilenames = new string[0];
+        [SerializeField] public string[]                tileNames = new string[0];
         [NonSerialized]  public Dictionary<int, Sprite> tileSprites;
         [NonSerialized]  public int[]                   tileIds;
 
@@ -23,13 +23,13 @@ namespace RL.Systems.Map {
             cfg.tilingMethod = (TilingMethod) Enum.Parse(typeof(TilingMethod),
                                                          cfg.tiling,
                                                          ignoreCase: true);
-            cfg.tileIds     = new int[cfg.tilenames.Length];
+            cfg.tileIds     = new int[cfg.tileNames.Length];
             cfg.tileSprites = new Dictionary<int, Sprite>();
             cfg.group = (Group) Enum.Parse(typeof(Group),
-                                           cfg.groupName,
+                                           cfg.groupName ?? "None",
                                            ignoreCase: true);
             cfg.theme = (Theme) Enum.Parse(typeof(Theme),
-                                           cfg.themeName,
+                                           cfg.themeName ?? "None",
                                            ignoreCase: true);
         }
     }

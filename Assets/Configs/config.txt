@@ -7,9 +7,16 @@
     },
     {
         "tiling": "random",
+        "groupName": "misc",
+        "tileNames": [
+            "Blank"
+        ]
+    },
+    {
+        "tiling": "random",
         "groupName": "floor",
         "themeName": "stone",
-        "tilenames": [
+        "tileNames": [
             "Slabs",
             "Tiles"
         ]

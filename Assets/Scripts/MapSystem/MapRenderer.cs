@@ -29,14 +29,15 @@ namespace RL.Systems.Map {
                         sprite = TilingMethods.Autotile(map, i, group, tilemapConfig);
                         break;
                     default:
-                        //sprite = sprite for missing graphics? or just a blank one?
+                        sprite = tilemapConfigs[Group.Misc].tileSprites[0];
                         break;
                 }
 
-                // create gameobject
-                // position at ...
-                // Map.IndexToWorldPos(i)
-                // set sprite on sprite renderer
+                Vector2Int coord = map.IndexToCoord(i);
+                GameObject go = new GameObject($"Tile_{coord.x:000}_{coord.y:000}",
+                                               typeof(SpriteRenderer));
+                go.transform.position = map.IndexToWorldPos(i);
+                go.GetComponent<SpriteRenderer>().sprite = sprite;
             }
         }
 

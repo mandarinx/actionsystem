@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace RL.Systems.Map {
     
@@ -12,7 +13,7 @@ namespace RL.Systems.Map {
         public const int MASK_S = 1 << 1;
         public const int MASK_W = 1 << 0;
 
-        private int width;
+        private readonly int width;
         // the data array represents a layer. Could be extended with
         // multiple arrays to support multiple layers
         private readonly int[] data;
@@ -24,6 +25,39 @@ namespace RL.Systems.Map {
             this.data = new int[data.Length];
             Array.Copy(data, this.data, data.Length);
             this.width = width;
+        }
+
+        public Vector3 IndexToWorldPos(int tileIndex) {
+            Vector2Int coord = IndexToCoord(tileIndex);
+            // multiply by tile size if needed
+            return new Vector3(coord.x, coord.y, 0f);
+        }
+
+        public Vector2Int IndexToCoord(int tileIndex) {
+            int y = Mathf.FloorToInt(tileIndex / (float)width);
+            int x = tileIndex % width;
+            return new Vector2Int(x, y);
+        }
+
+        public Vector3 CoordToWorldPos(Vector2Int coord) {
+            // multiply by tile size if needed
+            return new Vector3(coord.x, coord.y, 0f);
+        }
+
+        public int CoordToIndex(Vector2Int coord) {
+            return coord.y * width + coord.x;
+        }
+
+        public Vector2Int WorldPosToCoord(Vector3 worldPos) {
+            int x = Mathf.FloorToInt(worldPos.x);
+            int y = Mathf.FloorToInt(worldPos.y);
+            return new Vector2Int(x, y);
+        }
+
+        public int WorldPosToIndex(Vector3 worldPos) {
+            int x = Mathf.FloorToInt(worldPos.x);
+            int y = Mathf.FloorToInt(worldPos.y);
+            return y * width + x;
         }
 
         public bool TryGetTile(int i, out int tile) {

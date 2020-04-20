@@ -58,7 +58,7 @@ namespace RL {
             move = new MovementSystem();
             map = new MapSystem(config.map, config.tilemaps);
             
-            ActionSystem actionSys = new ActionSystem("RL");
+            ActionSystem actionSys = new ActionSystem("Game");
             actionSys.OnActionSystemAdded += iActionSystem => {
                 if (iActionSystem is IGameSystem gs) {
                     gs.InitGame(this);

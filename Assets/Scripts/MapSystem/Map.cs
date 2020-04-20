@@ -14,6 +14,7 @@ namespace RL.Systems.Map {
         public const int MASK_W = 1 << 0;
 
         private readonly int width;
+        private readonly int height;
         // the data array represents a layer. Could be extended with
         // multiple arrays to support multiple layers
         private readonly int[] data;
@@ -25,6 +26,8 @@ namespace RL.Systems.Map {
             this.data = new int[data.Length];
             Array.Copy(data, this.data, data.Length);
             this.width = width;
+            height = Mathf.FloorToInt(this.data.Length / (float)width);
+            // search for spawn point, and other useful meta data
         }
 
         public Vector3 IndexToWorldPos(int tileIndex) {
@@ -78,7 +81,7 @@ namespace RL.Systems.Map {
 
         public bool HasTile(int i, Group group) {
             return (i >= 0 && i < Length) 
-                   && GetGroup(data[i]) != group;
+                   && GetGroup(data[i]) == group;
         }
 
         public static Group GetGroup(int data) {

@@ -87,7 +87,7 @@ namespace RL {
             }
 
             for (int i = 0; i < handles.Count; ++i) {
-                Debug.Log($"Loaded {baseAddress}/{handles[i].Result.name}");
+                // Debug.Log($"Loaded {baseAddress}/{handles[i].Result.name}");
                 config.tileSprites.Add(i, handles[i].Result);
                 config.tileIds[i] = i;
             }

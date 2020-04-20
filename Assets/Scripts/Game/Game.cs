@@ -65,8 +65,17 @@ namespace RL {
                 }
             };
             actionSys.RegisterSystems();
-            
-            // map.Load();
+
+            map.Load(new[] {
+                01,01,01,01,01,01,01,01,01,01,01,01,
+                01,11,11,11,11,10,11,11,11,01,01,01,
+                01,11,10,10,10,10,10,10,11,01,01,01,
+                01,11,10,10,10,10,10,10,11,01,01,01,
+                01,11,11,11,11,11,11,10,11,01,01,01,
+                01,01,01,01,01,01,11,11,11,01,01,01,
+                01,01,01,01,01,01,01,01,01,01,01,01,
+                01,01,01,01,01,01,01,01,01,01,01,01,
+            }, 12);
             // Map.CreateRoom(map, new Vector2Int(2, 2), 8, 6);
             // MapRenderer.DrawLayer(map, CFG.LAYER_0, assets);
 
@@ -91,7 +100,7 @@ namespace RL {
 
             selection = Factory.CreateItem("Selection");
             selection.SetSprite(Assets.GetMisc(assets, "Selection"));
-            Coord selectionCoord = PositionSystem.Get("Selection", new Vector2Int(3, 3));
+            // Coord selectionCoord = PositionSystem.Get("Selection", new Vector2Int(3, 3));
             // selection.SetLocalPosition(selectionCoord.world);
             selection.SetSortingOrder(100);
 

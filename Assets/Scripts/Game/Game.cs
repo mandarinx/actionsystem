@@ -67,42 +67,40 @@ namespace RL {
             actionSys.RegisterSystems();
 
             map.Load(new[] {
-                01,01,01,01,01,01,01,01,01,01,01,01,
-                01,11,11,11,11,10,11,11,11,01,01,01,
-                01,11,10,10,10,10,10,10,11,01,01,01,
-                01,11,10,10,10,10,10,10,11,01,01,01,
-                01,11,11,11,11,11,11,10,11,01,01,01,
-                01,01,01,01,01,01,11,11,11,01,01,01,
-                01,01,01,01,01,01,01,01,01,01,01,01,
-                01,01,01,01,01,01,01,01,01,01,01,01,
-            }, 12);
-            // Map.CreateRoom(map, new Vector2Int(2, 2), 8, 6);
-            // MapRenderer.DrawLayer(map, CFG.LAYER_0, assets);
+                0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,
+                0x1,0xB,0xB,0xB,0xB,0x1000A,0xB,0xB,0xB,0x1,0x1,0x1,
+                0x1,0xB,0xA,0xA,0xA,0xA,0xA,0xA,0xB,0x1,0x1,0x1,
+                0x1,0xB,0xA,0xA,0xA,0xA,0xA,0xA,0xB,0x1,0x1,0x1,
+                0x1,0xB,0xA,0xA,0xA,0xA,0xA,0xA,0xB,0x1,0x1,0x1,
+                0x1,0xB,0xB,0xB,0xB,0xB,0xB,0xB,0xB,0x1,0x1,0x1,
+                0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,
+                0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,
+            }, 12, "Entrance");
 
-            player = Factory.CreateItem("Player");
-            player.SetSprite(Assets.GetEntity(assets, "Player"));
-            // Map.AddItem(map, player, new Coord(3, 3), CFG.LAYER_1);
-            player.AddAction<PickupAction>();
-            player.AddAction<PushAction>();
-            ItemDataSystem.Set(player, new ItemData {
-                strength = 10
-            });
-
-            Item sword = Factory.CreateItem("Sword");
-            sword.SetSprite(Assets.GetItem(assets, "Sword"));
-            Property.Add<PropWeight>(sword);
-            // Map.AddItem(map, sword, new Coord(new Vector2Int(4, 3)), CFG.LAYER_1);
-
-            Item crate = Factory.CreateItem("Crate");
-            crate.SetSprite(Assets.GetItem(assets, "Crate"));
-            // Map.AddItem(map, crate, new Coord(5, 4), CFG.LAYER_1);
-            Property.Add<PropPushable>(crate);
-
-            selection = Factory.CreateItem("Selection");
-            selection.SetSprite(Assets.GetMisc(assets, "Selection"));
-            // Coord selectionCoord = PositionSystem.Get("Selection", new Vector2Int(3, 3));
-            // selection.SetLocalPosition(selectionCoord.world);
-            selection.SetSortingOrder(100);
+            // player = Factory.CreateItem("Player");
+            // player.SetSprite(Assets.GetEntity(assets, "Player"));
+            // // Map.AddItem(map, player, new Coord(3, 3), CFG.LAYER_1);
+            // player.AddAction<PickupAction>();
+            // player.AddAction<PushAction>();
+            // ItemDataSystem.Set(player, new ItemData {
+            //     strength = 10
+            // });
+            //
+            // Item sword = Factory.CreateItem("Sword");
+            // sword.SetSprite(Assets.GetItem(assets, "Sword"));
+            // Property.Add<PropWeight>(sword);
+            // // Map.AddItem(map, sword, new Coord(new Vector2Int(4, 3)), CFG.LAYER_1);
+            //
+            // Item crate = Factory.CreateItem("Crate");
+            // crate.SetSprite(Assets.GetItem(assets, "Crate"));
+            // // Map.AddItem(map, crate, new Coord(5, 4), CFG.LAYER_1);
+            // Property.Add<PropPushable>(crate);
+            //
+            // selection = Factory.CreateItem("Selection");
+            // selection.SetSprite(Assets.GetMisc(assets, "Selection"));
+            // // Coord selectionCoord = PositionSystem.Get("Selection", new Vector2Int(3, 3));
+            // // selection.SetLocalPosition(selectionCoord.world);
+            // selection.SetSortingOrder(100);
 
             // Camera.main.transform.position = new Vector3(CFG.MAP_WIDTH  * 0.5f,
                                                          // CFG.MAP_HEIGHT * 0.5f,
@@ -166,9 +164,9 @@ namespace RL {
             break;
             }
 
-            if (Property.Has<PropDead>(player)) {
-                return GameState.GAME_OVER;
-            }
+            // if (Property.Has<PropDead>(player)) {
+            //     return GameState.GAME_OVER;
+            // }
 
             return state;
         }

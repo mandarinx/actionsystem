@@ -5,8 +5,9 @@ namespace RL.Systems.Map {
     
     public class Map {
 
-        public const int MASK_GROUP = 0xFF; // 255
-        public const int MASK_THEME = 0xFF; // 255
+        public const int MASK_GROUP = 0xFF; // 255, 8 bits
+        public const int MASK_THEME = 0xFF; // 255, 8 bits
+        public const int MASK_SPAWNPOINT = 0x10000; // the 17th bit
 
         public const int MASK_N = 1 << 3;
         public const int MASK_E = 1 << 2;
@@ -21,13 +22,25 @@ namespace RL.Systems.Map {
 
         public int Width => width;
         public int Length => data.Length;
+        public int Spawnpoint { get; }
 
         public Map(int[] data, int width) {
             this.data = new int[data.Length];
             Array.Copy(data, this.data, data.Length);
             this.width = width;
             height = Mathf.FloorToInt(this.data.Length / (float)width);
+            
             // search for spawn point, and other useful meta data
+            for (int i = 0; i < this.data.Length; ++i) {
+                if (HasSpawnpoint(this.data[i])) {
+                    Spawnpoint = i;
+                    return;
+                }
+            }
+        }
+
+        public bool HasSpawnpoint(int tileIndex) {
+            return (data[tileIndex] & MASK_SPAWNPOINT) > 0;
         }
 
         public Vector3 IndexToWorldPos(int tileIndex) {

@@ -1,4 +1,6 @@
-﻿namespace RL.Systems.Map {
+﻿using UnityEngine;
+
+namespace RL.Systems.Map {
 
     public class MapSystem {
         
@@ -14,10 +16,11 @@
             renderer = new MapRenderer(tilemapConfigs);
         }
 
-        public void Load(int[] mapData, int mapWidth) {
+        public void Load(int[] mapData, int mapWidth, string mapName) {
             // unload current map
             map = new Map(mapData, mapWidth);
-            renderer.Draw(map);
+            GameObject owner = new GameObject($"Map_{mapName}");
+            renderer.Draw(map, owner);
         }
     }
 }

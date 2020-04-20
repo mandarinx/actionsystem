@@ -14,7 +14,7 @@ namespace RL.Systems.Map {
             }
         }
 
-        public void Draw(Map map) {
+        public void Draw(Map map, GameObject owner) {
             for (int i = 0; i < map.Length; ++i) {
                 if (!map.TryGetTile(i, out int tile)) {
                     continue;
@@ -36,6 +36,7 @@ namespace RL.Systems.Map {
                 Vector2Int coord = map.IndexToCoord(i);
                 GameObject go = new GameObject($"Tile_{coord.x:00}_{coord.y:00}",
                                                typeof(SpriteRenderer));
+                go.transform.SetParent(owner.transform, worldPositionStays: false);
                 go.transform.position = map.IndexToWorldPos(i);
                 go.GetComponent<SpriteRenderer>().sprite = sprite;
             }

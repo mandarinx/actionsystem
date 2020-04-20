@@ -6,7 +6,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace RL {
     
-    public class GameManager : MonoBehaviour, IUpdate {
+    public class Bootstrapper : MonoBehaviour, IUpdate {
         
         public Game Game { get; private set; }
 

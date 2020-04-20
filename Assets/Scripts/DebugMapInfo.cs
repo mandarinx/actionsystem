@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using RL.Systems.Map;
 using TMPro;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace RL {
 
     public class DebugMapInfo : MonoBehaviour {
 
-        public GameManager gameManager;
+        public Bootstrapper bootstrapper;
         public TextMeshProUGUI txtMapInfo;
 
         private Camera        cam;
@@ -18,19 +19,22 @@ namespace RL {
         }
 
         private void Update() {
-            if (gameManager.Game == null) {
+            if (bootstrapper.Game == null) {
                 return;
             }
             ClearLog();
+            Map map = bootstrapper.Game.map.Map;
             Vector3 mouse = cam.ScreenToWorldPoint(Input.mousePosition);
-            Vector2Int coord = gameManager.Game.map.Map.WorldPosToCoord(mouse);
-            int index = gameManager.Game.map.Map.WorldPosToIndex(mouse);
-            // int tile = Map.GetData(gameManager.Game.map, coord);
+            Vector2Int coord = map.WorldPosToCoord(mouse);
+            int index = map.WorldPosToIndex(mouse);
+            bool spawnpoint = map.HasSpawnpoint(index);
             //
             Log($"Mouse [x: {mouse.x:00.000}, y: {mouse.y:00.000}]");
             Log($"Map coord [x: {coord.x}, y: {coord.y}]");
             Log($"Map index: {index}");
-            // Log($"Tile: {tile}");
+            if (spawnpoint) {
+                Log("Spawnpoint");
+            }
 
             PrintLog();
         }

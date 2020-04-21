@@ -8,5 +8,9 @@ namespace RL {
         public static MapSystem GetMapSystem(this GameSystems gameSystems) {
             return gameSystems.systems[2] as MapSystem;
         }
+
+        public static Factory GetFactory(this GameSystems gameSystems) {
+            return gameSystems.systems[3] as Factory;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using RL.Core;
 using RL.Systems.Game;
+using RL.Systems.Items;
 
 namespace RL {
 

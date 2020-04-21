@@ -1,6 +1,7 @@
 ﻿using System;
 using RL.Core;
 using RL.Systems.Game;
+using RL.Systems.Items;
 using RL.Systems.Map;
 using UnityEngine;
 
@@ -51,7 +52,8 @@ namespace RL {
             systems = new GameSystems();
             systems.Add(new AnimSystem());
             systems.Add(new MovementSystem());
-            systems.Add(new MapSystem(config.map, config.tilemaps));
+            systems.Add(new MapSystem(config.mapSystem));
+            systems.Add(new Factory());
 
             systems.Init(systems, config, assets);
 
@@ -63,7 +65,9 @@ namespace RL {
             };
             actionSys.RegisterSystems();
 
-            systems.GetMapSystem().Load(new[] {
+            MapSystem mapSystem = systems.GetMapSystem();
+            
+            mapSystem.Load(new[] {
                 0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,
                 0x1,0xB,0xB,0xB,0xB,0x1000A,0xB,0xB,0xB,0x1,0x1,0x1,
                 0x1,0xB,0xA,0xA,0xA,0xA,0xA,0xA,0xB,0x1,0x1,0x1,
@@ -74,13 +78,13 @@ namespace RL {
                 0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,
             }, 12, "Entrance");
 
-            // create player
-            // > create gameobject
-            // > set sprite ?? how to get it?
-            // get spawnpoint
-            // position player
+            player = systems.GetFactory().CreatePlayer("Player");
+            int spawnpoint = mapSystem.Map.Spawnpoint;
+            player.SetLocalPosition(mapSystem.Map.IndexToWorldPos(spawnpoint));
+            
             // make camera follow player. teleport, dont lerp
             
+
             // player = Factory.CreateItem("Player");
             // player.SetSprite(Assets.GetEntity(assets, "Player"));
             // // Map.AddItem(map, player, new Coord(3, 3), CFG.LAYER_1);
@@ -107,8 +111,8 @@ namespace RL {
             // selection.SetSortingOrder(100);
 
             // Camera.main.transform.position = new Vector3(CFG.MAP_WIDTH  * 0.5f,
-                                                         // CFG.MAP_HEIGHT * 0.5f,
-                                                         // -10.0f);
+            // CFG.MAP_HEIGHT * 0.5f,
+            // -10.0f);
         }
 
         public void Update(float dt) {

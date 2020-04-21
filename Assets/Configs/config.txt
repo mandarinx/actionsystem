@@ -1,24 +1,26 @@
 {
-    "tilemaps": [
-    {
-        "tiling": "autotile",
-        "groupName": "wall",
-        "themeName": "brick"
-    },
-    {
-        "tiling": "random",
-        "groupName": "common",
-        "tileNames": [
-            "Blank"
-        ]
-    },
-    {
-        "tiling": "random",
-        "groupName": "floor",
-        "themeName": "stone",
-        "tileNames": [
-            "Slabs",
-            "Tiles"
-        ]
-    }]
+    "mapSystem": {
+        "tilemaps": [
+        {
+            "tiling": "autotile",
+            "groupName": "wall",
+            "themeName": "brick"
+        },
+        {
+            "tiling": "random",
+            "groupName": "common",
+            "tileNames": [
+                "Blank"
+            ]
+        },
+        {
+            "tiling": "random",
+            "groupName": "floor",
+            "themeName": "stone",
+            "tileNames": [
+                "Slabs",
+                "Tiles"
+            ]
+        }]
+    }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace RL {
+namespace RL.Systems.Items {
 
     [AddComponentMenu("Item System/Inventory")]
     public class Inventory : MonoBehaviour {
@@ -18,6 +18,12 @@ namespace RL {
                 }
             }
             // Debug.Log($"Inventory {name} awake");
+        }
+
+        public static void Add(Transform owner, string inventoryName) {
+            GameObject inventory = new GameObject(inventoryName);
+            inventory.transform.SetParent(owner, false);
+            inventory.AddComponent<Inventory>();
         }
 
         public static int Count(Inventory inventory) {

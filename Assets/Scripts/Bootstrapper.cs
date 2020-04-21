@@ -18,7 +18,7 @@ namespace RL {
             Config.Parse(config);
 
             Assets assets = new Assets();
-            yield return assets.Load(config.tilemaps);
+            yield return assets.Load(config.mapSystem.tilemaps);
             
             Game = new Game(config, assets);
             UnityUpdate.Add(this);

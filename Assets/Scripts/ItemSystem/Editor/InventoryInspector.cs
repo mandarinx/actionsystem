@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-namespace RL {
+namespace RL.Systems.Items {
 
     [CustomEditor(typeof(Inventory))]
     public class InventoryInspector : Editor {

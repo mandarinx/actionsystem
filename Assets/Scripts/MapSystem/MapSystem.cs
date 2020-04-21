@@ -12,9 +12,9 @@ namespace RL.Systems.Map {
 
         public Map Map => map;
         
-        public MapSystem(MapSystemConfig mapSysConfig, TilemapConfig[] tilemapConfigs) {
+        public MapSystem(MapSystemConfig mapSysConfig) {
             // parse tilemap configs
-            renderer = new MapRenderer(tilemapConfigs);
+            renderer = new MapRenderer(mapSysConfig.tilemaps);
         }
 
         public void Init(IGameSystems gameSystems, IConfig config, IAssets assets) {

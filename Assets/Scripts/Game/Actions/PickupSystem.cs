@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using RL.Systems.Items;
 using UnityEngine;
 
 namespace RL {
@@ -11,9 +12,9 @@ namespace RL {
             PropWeight propWeight = Property.Get<PropWeight>(target);
             
             int strength = 0;
-            if (ItemDataSystem.Get(source, out ItemData itemData)) {
-                strength = itemData.strength;
-            }
+            // if (ItemDataSystem.Get(source, out ItemData itemData)) {
+            //     strength = itemData.strength;
+            // }
 
             if (strength < propWeight.Weight) {
                 Debug.Log($"{source.name} could not pick up {target.name}. It's too heavy!");

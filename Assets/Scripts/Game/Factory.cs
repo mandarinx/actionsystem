@@ -1,23 +1,28 @@
-﻿using UnityEngine;
+﻿using RL.Core;
+using RL.Systems.Items;
+using UnityEngine;
 
 namespace RL {
 
-    public static class Factory {
+    public class Factory : IGameSystem {
 
-        public static Item CreateItem(string name) {
-            GameObject go = new GameObject();
+        private Assets assets;
+        
+        public void Init(IGameSystems gameSystems, IConfig config, IAssets assets) {
+            this.assets = (Assets)assets;
+        }
+
+        public Item CreatePlayer(string name) {
+            GameObject go = new GameObject($"Player_{name}");
             
-            go.AddComponent<SpriteRenderer>();
+            SpriteRenderer spriteRenderer = go.AddComponent<SpriteRenderer>();
+            spriteRenderer.sprite = Assets.GetEntity(assets, "Player");
+            spriteRenderer.sortingOrder = 100;
             
-            GameObject inventory = new GameObject("Items");
-            inventory.transform.SetParent(go.transform, false);
-            inventory.AddComponent<Inventory>();
+            Inventory.Add(go.transform, "Items");
             
             Item item = go.AddComponent<Item>();
             item.SetName(name);
-            ItemDataSystem.Set(item, new ItemData());
-            
-            Property.Add<PropPosition>(item);
             
             return item;
         }

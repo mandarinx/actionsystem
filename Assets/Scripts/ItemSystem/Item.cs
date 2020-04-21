@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RL {
+namespace RL.Systems.Items {
 
     [AddComponentMenu("Item System/Item")]
     public class Item : MonoBehaviour {

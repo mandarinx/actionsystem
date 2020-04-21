@@ -6,7 +6,7 @@ using System.Text;
 using UnityEditor;
 using Object = UnityEngine.Object;
 
-namespace Altruist {
+namespace RL {
 
     [Serializable]
     public class ActionConfig : Object {
@@ -24,7 +24,7 @@ namespace Altruist {
         private List<ActionConfig> actionConfigs;
         private const string tab = "    ";
         
-        [MenuItem("Tools/Altruist/Create Actions")]
+        [MenuItem("Tools/RL/Create Actions")]
         public static void Init() {
             CreateActions win = GetWindow<CreateActions>();
             win.titleContent = new GUIContent("Create Actions");

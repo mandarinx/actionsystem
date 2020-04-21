@@ -41,7 +41,6 @@ namespace RL {
         // consider moving player and selection to separate systems
         private readonly Item      player;
         private readonly Item      selection;
-        // assets could also be registered as a game system
         private readonly Assets    assets;
         
         private GameState state;
@@ -52,46 +51,15 @@ namespace RL {
 
             state = GameState.WARMUP;
             
-            // Instantiate all systems necessary for other systems to function
             systems = new GameSystems();
             systems.Add(new AnimSystem());
             systems.Add(new MovementSystem());
             systems.Add(new MapSystem(config.map, config.tilemaps));
 
-            // If there was a central game system registration, I could do something like
-            // gameSystems.RegisterActionSystem<OpenSystem>();
-            // gameSystems.Register<AnimSystem>()
-            // gameSystems.Register<MapSystem>()
-            // the problem isn't that game systems don't get easy access to each other,
-            // it's that the action system has its own way of instantiating actions,
-            // and that it is hidden from external systems. Also, the action system is
-            // in its own assembly, and has no references to the game assembly, which
-            // makes it hard to pass Game into the action system constructor.
-            
-            // Could do something like:
-            // MapSystem map = new MapSystem(param1,param2);
-            // gameSystems.Init(map);
-            // -- IGameSystem igs = map as IGameSystem;
-            // -- igs.Init(game);
-            
-            // If all game code is written as separate systems, it'll be easy
-            // gather all of them in a game systems class.
-            // GameSystems.ctor(Game, Config, Assets) {
-            //   to make Game the class that's responsible for setting up
-            //   all the systems and dependencies, move this into Game
-            //   systems.Add(new AnimSystem());
-            //   systems.Add(new MapSystem(config));
-            //
-            //   when all systems are created
-            //   foreach (system) {
-            //     Sub systems shouldn't know about Game. That makes code
-            //     more portable. One can make a new game class, without
-            //     changing other systems. Game
-            //     system.Init(this, config, assets)
-            //   }
-            // }
+            systems.Init(systems, config, assets);
+
             ActionSystem actionSys = new ActionSystem(assemblyNames: "Game");
-            actionSys.OnActionSystemAdded += iActionSystem => {
+            actionSys.OnActionSystemRegistered += iActionSystem => {
                 if (iActionSystem is IGameSystem gs) {
                     gs.Init(systems, config, assets);
                 }
@@ -112,6 +80,7 @@ namespace RL {
             // create player
             // get spawnpoint
             // position player
+            // make camera follow player. teleport, dont lerp
             
             // player = Factory.CreateItem("Player");
             // player.SetSprite(Assets.GetEntity(assets, "Player"));

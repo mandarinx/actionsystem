@@ -11,7 +11,7 @@ using Debug = UnityEngine.Debug;
 
 namespace RL {
 
-    public delegate void ActionSystemAdded(IActionSystem actionSys);
+    public delegate void ActionSystemRegistered(IActionSystem actionSys);
     
     public class ActionSystem {
         
@@ -26,7 +26,7 @@ namespace RL {
         private readonly string[]                        assemblies;
         private static   ActionSystem                    self;
         
-        public event ActionSystemAdded OnActionSystemAdded = _ => {};
+        public event ActionSystemRegistered OnActionSystemRegistered = _ => {};
 
         public ActionSystem(params string[] assemblyNames) {
             self = this;
@@ -50,7 +50,7 @@ namespace RL {
                 propertyTypes.Add(data.actionType, data.propertyType);
                 IActionSystem instance = (IActionSystem) Activator.CreateInstance(data.actionSystemType);
                 actionSystems.Add(data.actionType, instance);
-                OnActionSystemAdded(instance);
+                OnActionSystemRegistered(instance);
                 Log($"Registered ActionSystem {data.actionSystemType} for action {data.actionType}");
             }
 

@@ -29,7 +29,6 @@ namespace RL.Systems.Map {
             Array.Copy(data, this.data, data.Length);
             this.width = width;
             height = Mathf.FloorToInt(this.data.Length / (float)width);
-            Debug.Log($"width: {width} height: {height}");
             
             // search for spawn point, and other useful meta data
             for (int i = 0; i < this.data.Length; ++i) {

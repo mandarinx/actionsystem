@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using RL.Core;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Random = UnityEngine.Random;
@@ -36,7 +37,7 @@ namespace RL {
         }
     }
     
-    public class Assets {
+    public class Assets : IAssets {
         private AssetGroup entities = new AssetGroup("entities");
         private AssetGroup items = new AssetGroup("items");
         private AssetGroup misc = new AssetGroup("misc");
@@ -67,7 +68,7 @@ namespace RL {
                     config.tileIds = new int[16];
                     
                     for (int i = 0; i < 16; ++i) {
-                        string address = $"{baseAddress}/{CFG.WALL_MAP[i]}.png";
+                        string address = $"{baseAddress}/{CFG.TILE_TABLE_WALLS[i]}.png";
                         handles.Add(Addressables.LoadAssetAsync<Sprite>(address));
                     }
                     break;

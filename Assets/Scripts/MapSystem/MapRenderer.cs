@@ -38,7 +38,9 @@ namespace RL.Systems.Map {
                                                typeof(SpriteRenderer));
                 go.transform.SetParent(owner.transform, worldPositionStays: false);
                 go.transform.position = map.IndexToWorldPos(i);
-                go.GetComponent<SpriteRenderer>().sprite = sprite;
+                SpriteRenderer spriteRenderer = go.GetComponent<SpriteRenderer>();
+                spriteRenderer.sprite = sprite;
+                spriteRenderer.sortingOrder = -1000;
             }
         }
     }

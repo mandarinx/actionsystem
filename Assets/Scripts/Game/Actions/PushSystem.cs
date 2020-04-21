@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
+using RL.Core;
+using RL.Systems.Game;
 
 namespace RL {
 
@@ -10,8 +11,9 @@ namespace RL {
         private AnimSystem anim;
         // private Map map;
         
-        public void InitGame(Game game) {
-            anim = game.anim;
+
+        public void Init(IGameSystems gameSystems, IConfig config, IAssets assets) {
+            // anim = game.anim;
             // map = game.map;
         }
 

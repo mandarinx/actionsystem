@@ -1,10 +1,11 @@
 ﻿using System;
+using RL.Core;
 using RL.Systems.Map;
 
 namespace RL {
 
     [Serializable]
-    public class Config {
+    public class Config : IConfig {
 
         public MapSystemConfig map;
         public TilemapConfig[] tilemaps;

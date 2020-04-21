@@ -1,3 +1,15 @@
-﻿{
-	"name": "MapSystem"
+{
+    "name": "MapSystem",
+    "references": [
+        "GUID:af6b3d8bf55ff481c806af7dba449a50"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

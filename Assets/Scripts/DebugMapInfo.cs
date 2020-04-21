@@ -23,12 +23,12 @@ namespace RL {
                 return;
             }
             ClearLog();
-            Map map = bootstrapper.Game.map.Map;
+            Map map = bootstrapper.Game.systems.GetMapSystem().Map;
             Vector3 mouse = cam.ScreenToWorldPoint(Input.mousePosition);
             Vector2Int coord = map.WorldPosToCoord(mouse);
             int index = map.WorldPosToIndex(mouse);
             bool spawnpoint = map.HasSpawnpoint(index);
-            //
+            
             Log($"Mouse [x: {mouse.x:00.000}, y: {mouse.y:00.000}]");
             Log($"Map coord [x: {coord.x}, y: {coord.y}]");
             Log($"Map index: {index}");

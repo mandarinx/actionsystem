@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using RL.Core;
 
-namespace RL {
+namespace RL.Systems.Game {
 
-    public class AnimSystem {
+    public class AnimSystem : IGameSystem {
 
         private readonly List<IEnumerator> animations = new List<IEnumerator>(1024);
         private readonly AnimSystemRunner  runner;
@@ -14,6 +15,9 @@ namespace RL {
         public AnimSystem() {
             runner = new GameObject("AnimSystemRunner", typeof(AnimSystemRunner))
                .GetComponent<AnimSystemRunner>();
+        }
+
+        public void Init(IGameSystems gameSystems, IConfig config, IAssets assets) {
         }
 
         public void Run() {

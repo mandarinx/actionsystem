@@ -29,10 +29,11 @@ namespace RL.Systems.Map {
             Array.Copy(data, this.data, data.Length);
             this.width = width;
             height = Mathf.FloorToInt(this.data.Length / (float)width);
+            Debug.Log($"width: {width} height: {height}");
             
             // search for spawn point, and other useful meta data
             for (int i = 0; i < this.data.Length; ++i) {
-                if (HasSpawnpoint(this.data[i])) {
+                if (HasSpawnpoint(i)) {
                     Spawnpoint = i;
                     return;
                 }
@@ -66,13 +67,17 @@ namespace RL.Systems.Map {
 
         public Vector2Int WorldPosToCoord(Vector3 worldPos) {
             int x = Mathf.FloorToInt(worldPos.x);
+            x = Mathf.Clamp(x, 0, width - 1);
             int y = Mathf.FloorToInt(worldPos.y);
+            y = Mathf.Clamp(y, 0, height - 1);
             return new Vector2Int(x, y);
         }
 
         public int WorldPosToIndex(Vector3 worldPos) {
             int x = Mathf.FloorToInt(worldPos.x);
+            x = Mathf.Clamp(x, 0, width - 1);
             int y = Mathf.FloorToInt(worldPos.y);
+            y = Mathf.Clamp(y, 0, height - 1);
             return y * width + x;
         }
 

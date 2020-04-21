@@ -1,4 +1,6 @@
 ﻿using System;
+using RL.Core;
+using RL.Systems.Game;
 using RL.Systems.Map;
 using UnityEngine;
 
@@ -34,39 +36,69 @@ namespace RL {
     
     public class Game {
 
-        public readonly MapSystem      map;
-        public readonly AnimSystem     anim;
-        public readonly MovementSystem move;
+        public readonly GameSystems systems;
 
+        // consider moving player and selection to separate systems
         private readonly Item      player;
         private readonly Item      selection;
+        // assets could also be registered as a game system
         private readonly Assets    assets;
         
         private GameState state;
         private InputCommand inputCmd;
         
-        private static Game self;
-        
         public Game(Config config, Assets assets) {
-            self = this;
             this.assets = assets;
 
             state = GameState.WARMUP;
             
             // Instantiate all systems necessary for other systems to function
-            anim = new AnimSystem();
-            move = new MovementSystem();
-            map = new MapSystem(config.map, config.tilemaps);
+            systems = new GameSystems();
+            systems.Add(new AnimSystem());
+            systems.Add(new MovementSystem());
+            systems.Add(new MapSystem(config.map, config.tilemaps));
+
+            // If there was a central game system registration, I could do something like
+            // gameSystems.RegisterActionSystem<OpenSystem>();
+            // gameSystems.Register<AnimSystem>()
+            // gameSystems.Register<MapSystem>()
+            // the problem isn't that game systems don't get easy access to each other,
+            // it's that the action system has its own way of instantiating actions,
+            // and that it is hidden from external systems. Also, the action system is
+            // in its own assembly, and has no references to the game assembly, which
+            // makes it hard to pass Game into the action system constructor.
             
-            ActionSystem actionSys = new ActionSystem("Game");
+            // Could do something like:
+            // MapSystem map = new MapSystem(param1,param2);
+            // gameSystems.Init(map);
+            // -- IGameSystem igs = map as IGameSystem;
+            // -- igs.Init(game);
+            
+            // If all game code is written as separate systems, it'll be easy
+            // gather all of them in a game systems class.
+            // GameSystems.ctor(Game, Config, Assets) {
+            //   to make Game the class that's responsible for setting up
+            //   all the systems and dependencies, move this into Game
+            //   systems.Add(new AnimSystem());
+            //   systems.Add(new MapSystem(config));
+            //
+            //   when all systems are created
+            //   foreach (system) {
+            //     Sub systems shouldn't know about Game. That makes code
+            //     more portable. One can make a new game class, without
+            //     changing other systems. Game
+            //     system.Init(this, config, assets)
+            //   }
+            // }
+            ActionSystem actionSys = new ActionSystem(assemblyNames: "Game");
             actionSys.OnActionSystemAdded += iActionSystem => {
                 if (iActionSystem is IGameSystem gs) {
-                    gs.InitGame(this);
+                    gs.Init(systems, config, assets);
                 }
             };
             actionSys.RegisterSystems();
 
-            map.Load(new[] {
+            systems.GetMapSystem().Load(new[] {
                 0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,
                 0x1,0xB,0xB,0xB,0xB,0x1000A,0xB,0xB,0xB,0x1,0x1,0x1,
                 0x1,0xB,0xA,0xA,0xA,0xA,0xA,0xA,0xB,0x1,0x1,0x1,
@@ -77,6 +109,10 @@ namespace RL {
                 0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,
             }, 12, "Entrance");
 
+            // create player
+            // get spawnpoint
+            // position player
+            
             // player = Factory.CreateItem("Player");
             // player.SetSprite(Assets.GetEntity(assets, "Player"));
             // // Map.AddItem(map, player, new Coord(3, 3), CFG.LAYER_1);
@@ -132,9 +168,9 @@ namespace RL {
                 case InputCommand.WALK:
                     Debug.Log($"GameState.ResolveAction : Move");
                     // move.Move(player, fromCoord, toCoord);
-                    anim.DoMove(player.transform, 
-                                player.transform.position,
-                                selection.transform.position);
+                    // anim.DoMove(player.transform, 
+                    //             player.transform.position,
+                    //             selection.transform.position);
                     break;
                 case InputCommand.INTERACT:
                     Debug.Log($"GameState.ResolveAction : Interact");
@@ -149,16 +185,17 @@ namespace RL {
                 // run npc ai => decide what to do, resolve actions
                 // start animations
                 // Verbs.Main(this, player, PositionSystem.Get("Selection"));
-                anim.Run();
+                
+                // anim.Run();
                 UpdateSystems();
                 state = GameState.PLAY_ANIMATIONS;
             break;
             
             case GameState.PLAY_ANIMATIONS:
-                if (anim.IsRunning) {
-                    UpdateSystems();
-                    break;
-                }
+                // if (anim.IsRunning) {
+                //     UpdateSystems();
+                //     break;
+                // }
                 Debug.Log($"GameState.PlayAnimations : done");
                 state = GameState.AWAITING_PLAYER_INPUT;
             break;

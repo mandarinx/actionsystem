@@ -17,44 +17,45 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 55deb4c94171348239837f51eb79fc2e
   m_SerializeEntries:
+  - m_GUID: 2b7a3bfa5ec8340d9a89ef9208a9aead
+    m_Address: Sprites/Common
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 102900000, guid: 2b7a3bfa5ec8340d9a89ef9208a9aead, type: 3}
+    m_TargetAsset: {fileID: 102900000, guid: 2b7a3bfa5ec8340d9a89ef9208a9aead, type: 3}
   - m_GUID: 7aef510e264c94e70b23e2d943d63c70
-    m_Address: Assets/Tiles/Entities
+    m_Address: Sprites/Entities
     m_ReadOnly: 0
     m_SerializedLabels:
     - entities
-    m_mainAssetType: 
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+    m_MainAsset: {fileID: 102900000, guid: 7aef510e264c94e70b23e2d943d63c70, type: 3}
+    m_TargetAsset: {fileID: 102900000, guid: 7aef510e264c94e70b23e2d943d63c70, type: 3}
   - m_GUID: af25abb3a6c3c458eb2f671e749e4cb7
-    m_Address: Assets/Tiles/Items
+    m_Address: Sprites/Items
     m_ReadOnly: 0
     m_SerializedLabels:
     - items
-    m_mainAssetType: 
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+    m_MainAsset: {fileID: 102900000, guid: af25abb3a6c3c458eb2f671e749e4cb7, type: 3}
+    m_TargetAsset: {fileID: 102900000, guid: af25abb3a6c3c458eb2f671e749e4cb7, type: 3}
   - m_GUID: c30f5e3cabb3f45a9af1d181b425732d
-    m_Address: Misc
+    m_Address: Tiles/Common
     m_ReadOnly: 0
     m_SerializedLabels:
     - misc
-    m_mainAssetType: 
     m_MainAsset: {fileID: 102900000, guid: c30f5e3cabb3f45a9af1d181b425732d, type: 3}
     m_TargetAsset: {fileID: 102900000, guid: c30f5e3cabb3f45a9af1d181b425732d, type: 3}
   - m_GUID: c843a8d148d0f4330b0062476f556a5c
-    m_Address: Floor
+    m_Address: Tiles/Floor
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_mainAssetType: 
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+    m_MainAsset: {fileID: 102900000, guid: c843a8d148d0f4330b0062476f556a5c, type: 3}
+    m_TargetAsset: {fileID: 102900000, guid: c843a8d148d0f4330b0062476f556a5c, type: 3}
   - m_GUID: e5724e400fc574722a88e6c26e87d0bb
-    m_Address: Wall
+    m_Address: Tiles/Wall
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_mainAssetType: 
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+    m_MainAsset: {fileID: 102900000, guid: e5724e400fc574722a88e6c26e87d0bb, type: 3}
+    m_TargetAsset: {fileID: 102900000, guid: e5724e400fc574722a88e6c26e87d0bb, type: 3}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: eb3003041d446428eaa837f308abb9f7, type: 2}
   m_SchemaSet:

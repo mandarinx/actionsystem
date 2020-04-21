@@ -11,6 +11,7 @@ namespace RL {
         public Game Game { get; private set; }
 
         private IEnumerator Start() {
+            // why is config a text file?
             AsyncOperationHandle<TextAsset> configHandle = Addressables.LoadAssetAsync<TextAsset>("config.txt");
             yield return configHandle;
             Config config = JsonUtility.FromJson<Config>(configHandle.Result.text);
@@ -22,15 +23,8 @@ namespace RL {
             Game = new Game(config, assets);
             UnityUpdate.Add(this);
         }
-
         public void OnUpdate(float dt) {
-            GameState gameState = Game.Update(dt);
-            if (gameState != GameState.GAME_OVER) {
-                return;
-            }
-            
-            Debug.Log("Game over");
-            UnityUpdate.Remove(this);
+            Game.Update(dt);
         }
     }
 }

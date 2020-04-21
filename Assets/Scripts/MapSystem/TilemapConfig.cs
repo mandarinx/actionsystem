@@ -20,17 +20,15 @@ namespace RL.Systems.Map {
         [NonSerialized]  public int[]                   tileIds;
 
         public static void Parse(TilemapConfig cfg) {
-            cfg.tilingMethod = (TilingMethod) Enum.Parse(typeof(TilingMethod),
-                                                         cfg.tiling,
-                                                         ignoreCase: true);
-            cfg.tileIds     = new int[cfg.tileNames.Length];
-            cfg.tileSprites = new Dictionary<int, Sprite>();
-            cfg.group = (Group) Enum.Parse(typeof(Group),
-                                           cfg.groupName ?? "None",
-                                           ignoreCase: true);
-            cfg.theme = (Theme) Enum.Parse(typeof(Theme),
-                                           cfg.themeName ?? "None",
-                                           ignoreCase: true);
+            cfg.tilingMethod = Parse<TilingMethod>(cfg.tiling, "undefined");
+            cfg.tileIds      = new int[cfg.tileNames.Length];
+            cfg.tileSprites  = new Dictionary<int, Sprite>();
+            cfg.group        = Parse<Group>(cfg.groupName, "None");
+            cfg.theme        = Parse<Theme>(cfg.themeName, "None");
+        }
+
+        private static T Parse<T>(string value, string defaults) {
+            return (T)Enum.Parse(typeof(T), value ?? defaults, ignoreCase: true);
         }
     }
 }

@@ -38,9 +38,9 @@ namespace RL {
     }
     
     public class Assets : IAssets {
-        private AssetGroup entities = new AssetGroup("entities");
-        private AssetGroup items = new AssetGroup("items");
-        private AssetGroup misc = new AssetGroup("misc");
+        private readonly AssetGroup entities = new AssetGroup("entities");
+        private readonly AssetGroup items = new AssetGroup("items");
+        private readonly AssetGroup misc = new AssetGroup("misc");
 
         public IEnumerator Load(TilemapConfig[] tilemapConfigs) {
             for (int i = 0; i < tilemapConfigs.Length; ++i) {
@@ -58,7 +58,7 @@ namespace RL {
                 yield break;
             }
 
-            string baseAddress = $"{Utils.Capitalize(config.groupName)}";
+            string baseAddress = $"Tiles/{Utils.Capitalize(config.groupName)}";
             if (config.theme != Theme.None) {
                 baseAddress = $"{baseAddress}/{Utils.Capitalize(config.themeName)}";
             }

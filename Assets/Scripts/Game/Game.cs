@@ -41,14 +41,11 @@ namespace RL {
         // consider moving player and selection to separate systems
         private readonly Item      player;
         private readonly Item      selection;
-        private readonly Assets    assets;
         
         private GameState state;
         private InputCommand inputCmd;
         
-        public Game(Config config, Assets assets) {
-            this.assets = assets;
-
+        public Game(Config config, IAssets assets) {
             state = GameState.WARMUP;
             
             systems = new GameSystems();
@@ -78,6 +75,8 @@ namespace RL {
             }, 12, "Entrance");
 
             // create player
+            // > create gameobject
+            // > set sprite ?? how to get it?
             // get spawnpoint
             // position player
             // make camera follow player. teleport, dont lerp
@@ -112,7 +111,7 @@ namespace RL {
                                                          // -10.0f);
         }
 
-        public GameState Update(float dt) {
+        public void Update(float dt) {
 
             switch (state) {
             case GameState.UNDEFINED:
@@ -173,8 +172,6 @@ namespace RL {
             // if (Property.Has<PropDead>(player)) {
             //     return GameState.GAME_OVER;
             // }
-
-            return state;
         }
 
         private static InputState GetInputState() {

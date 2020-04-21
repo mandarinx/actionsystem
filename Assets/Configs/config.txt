@@ -7,7 +7,7 @@
     },
     {
         "tiling": "random",
-        "groupName": "misc",
+        "groupName": "common",
         "tileNames": [
             "Blank"
         ]

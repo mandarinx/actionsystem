@@ -2,8 +2,9 @@
 namespace RL.Systems.Map {
 
     public enum TilingMethod {
-        AUTOTILE    = 0,
-        RANDOM      = 1,
-        PERLINNOISE = 2,
+        UNDEFINED   = 0,
+        AUTOTILE    = 1,
+        RANDOM      = 2,
+        PERLINNOISE = 3,
     }
 }

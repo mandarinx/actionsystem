@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RL.Systems.Map {
@@ -29,7 +30,8 @@ namespace RL.Systems.Map {
                         sprite = TilingMethods.Autotile(map, i, group, tilemapConfig);
                         break;
                     default:
-                        sprite = tilemapConfigs[Group.Misc].tileSprites[0];
+                        int blank = Array.IndexOf(tilemapConfigs[Group.Common].tileNames, "Blank");
+                        sprite = tilemapConfigs[Group.Common].tileSprites[blank];
                         break;
                 }
 

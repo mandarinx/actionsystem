@@ -54,6 +54,7 @@ namespace RL {
             systems.Add(new MovementSystem());
             systems.Add(new MapSystem(config.mapSystem));
             systems.Add(new Factory());
+            systems.Add(new CameraSystem());
 
             systems.Init(systems, config, assets);
 
@@ -81,9 +82,10 @@ namespace RL {
             player = systems.GetFactory().CreatePlayer("Player");
             int spawnpoint = mapSystem.Map.Spawnpoint;
             player.SetLocalPosition(mapSystem.Map.IndexToWorldPos(spawnpoint));
+
+            systems.Get<CameraSystem>().SetTarget(player.transform);
             
             // make camera follow player. teleport, dont lerp
-            
 
             // player = Factory.CreateItem("Player");
             // player.SetSprite(Assets.GetEntity(assets, "Player"));

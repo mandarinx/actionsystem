@@ -10,11 +10,9 @@ namespace RL {
         public Bootstrapper bootstrapper;
         public TextMeshProUGUI txtMapInfo;
 
-        private Camera        cam;
         private StringBuilder log;
 
         private void Awake() {
-            cam = Camera.main;
             log = new StringBuilder();
         }
 
@@ -24,7 +22,7 @@ namespace RL {
             }
             ClearLog();
             Map map = bootstrapper.Game.systems.GetMapSystem().Map;
-            Vector3 mouse = cam.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2Int coord = map.WorldPosToCoord(mouse);
             int index = map.WorldPosToIndex(mouse);
             bool spawnpoint = map.HasSpawnpoint(index);

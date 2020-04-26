@@ -15,5 +15,14 @@ namespace RL.Systems.Game {
                 systems[i].Init(gameSystems, config, assets);
             }
         }
+
+        public T Get<T>() where T : IGameSystem {
+            for (int i = 0; i < systems.Count; ++i) {
+                if (systems[i] is T) {
+                    return (T) systems[i];
+                }
+            }
+            return default;
+        }
     }
 }

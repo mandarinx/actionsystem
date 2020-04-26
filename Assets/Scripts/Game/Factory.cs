@@ -16,7 +16,7 @@ namespace RL {
             GameObject go = new GameObject($"Player_{name}");
             
             SpriteRenderer spriteRenderer = go.AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = Assets.GetEntity(assets, "Player");
+            spriteRenderer.sprite = assets.GetEntity("Player");
             spriteRenderer.sortingOrder = 100;
             
             Inventory.Add(go.transform, "Items");

@@ -9,18 +9,18 @@ using RL.Systems.Map;
 
 namespace RL {
 
-    public class AssetGroup {
+    public class AssetGroup<T> where T : Object {
 
         private readonly string                     assetLabel;
-        private readonly Dictionary<string, Sprite> table = new Dictionary<string, Sprite>();
-        private readonly List<Sprite>               list = new List<Sprite>();
+        private readonly Dictionary<string, T> table = new Dictionary<string, T>();
+        private readonly List<T>               list = new List<T>();
         
         public AssetGroup(string label) {
             assetLabel = label;
         }
 
         public IEnumerator Load() {
-            AsyncOperationHandle<IList<Sprite>> handle = Addressables.LoadAssetsAsync<Sprite>(assetLabel, null);
+            AsyncOperationHandle<IList<T>> handle = Addressables.LoadAssetsAsync<T>(assetLabel, null);
             yield return handle;
             for (int n = 0; n < handle.Result.Count; ++n) {
                 table.Add(handle.Result[n].name, handle.Result[n]);
@@ -28,19 +28,20 @@ namespace RL {
             }
         }
 
-        public static Sprite Get(AssetGroup group, string name) {
-            return group.table[name];
+        public T Get(string name) {
+            return table[name];
         }
 
-        public static Sprite GetRandom(AssetGroup group) {
-            return group.list[Random.Range(0, group.list.Count)];
+        public T GetRandom() {
+            return list[Random.Range(0, list.Count)];
         }
     }
     
     public class Assets : IAssets {
-        private readonly AssetGroup entities = new AssetGroup("entities");
-        private readonly AssetGroup items = new AssetGroup("items");
-        private readonly AssetGroup misc = new AssetGroup("misc");
+        private readonly AssetGroup<Sprite> entities = new AssetGroup<Sprite>("entities");
+        private readonly AssetGroup<Sprite> items = new AssetGroup<Sprite>("items");
+        private readonly AssetGroup<Sprite> misc = new AssetGroup<Sprite>("misc");
+        private readonly AssetGroup<GameObject> prefabs = new AssetGroup<GameObject>("prefabs");
 
         public IEnumerator Load(TilemapConfig[] tilemapConfigs) {
             for (int i = 0; i < tilemapConfigs.Length; ++i) {
@@ -49,6 +50,7 @@ namespace RL {
             yield return entities.Load();
             yield return items.Load();
             yield return misc.Load();
+            yield return prefabs.Load();
         }
 
         private IEnumerator LoadTilemap(TilemapConfig config) {
@@ -94,28 +96,32 @@ namespace RL {
             }
         }
 
-        public static Sprite GetEntity(Assets assets, string name) {
-            return AssetGroup.Get(assets.entities, name);
+        public Sprite GetEntity(string name) {
+            return entities.Get(name);
         }
 
-        public static Sprite GetRandomEntity(Assets assets) {
-            return AssetGroup.GetRandom(assets.entities);
+        public Sprite GetRandomEntity() {
+            return entities.GetRandom();
         }
 
-        public static Sprite GetItem(Assets assets, string name) {
-            return AssetGroup.Get(assets.items, name);
+        public Sprite GetItem(string name) {
+            return items.Get(name);
         }
 
-        public static Sprite GetRandomItem(Assets assets) {
-            return AssetGroup.GetRandom(assets.items);
+        public Sprite GetRandomItem() {
+            return items.GetRandom();
         }
 
-        public static Sprite GetMisc(Assets assets, string name) {
-            return AssetGroup.Get(assets.misc, name);
+        public Sprite GetMisc(string name) {
+            return misc.Get(name);
         }
 
-        public static Sprite GetRandomMisc(Assets assets) {
-            return AssetGroup.GetRandom(assets.misc);
+        public Sprite GetRandomMisc() {
+            return misc.GetRandom();
+        }
+
+        public GameObject GetPrefab(string name) {
+            return prefabs.Get(name);
         }
     }
     

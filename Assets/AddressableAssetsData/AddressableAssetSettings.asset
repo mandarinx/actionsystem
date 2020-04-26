@@ -72,6 +72,7 @@ MonoBehaviour:
     - misc
     - walls
     - floors
+    - prefabs
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 3863f99eaeb0d45ca82a6a909cbc038b, type: 2}

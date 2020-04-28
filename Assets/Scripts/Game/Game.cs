@@ -45,28 +45,31 @@ namespace RL {
         
         private GameState state;
         private InputCommand inputCmd;
+        private Context ctx;
         
-        public Game(Config config, IAssets assets) {
-            state = GameState.WARMUP;
+        public Game(Context ctx) {
+            this.ctx = ctx;
+            
+            state = GameState.UNDEFINED;
             
             systems = new GameSystems();
             systems.Add(new AnimSystem());
             systems.Add(new MovementSystem());
-            systems.Add(new MapSystem(config.mapSystem));
-            systems.Add(new Factory());
+            systems.Add(new MapSystem(ctx.config.Get<MapSystemConfig>()));
             systems.Add(new CameraSystem());
-
-            systems.Init(systems, config, assets);
-
+            systems.Add(new EntitySystem());
+            
+            systems.Init(systems, ctx);
+            
             ActionSystem actionSys = new ActionSystem(assemblyNames: "Game");
             actionSys.OnActionSystemRegistered += iActionSystem => {
                 if (iActionSystem is IGameSystem gs) {
-                    gs.Init(systems, config, assets);
+                    gs.Init(systems, ctx);
                 }
             };
             actionSys.RegisterSystems();
 
-            MapSystem mapSystem = systems.GetMapSystem();
+            MapSystem mapSystem = systems.Get<MapSystem>();
             
             mapSystem.Load(new[] {
                 0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,
@@ -78,52 +81,18 @@ namespace RL {
                 0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,
                 0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,
             }, 12, "Entrance");
-
-            player = systems.GetFactory().CreatePlayer("Player");
+            
+            player = systems.Get<EntitySystem>().CreatePlayer("Player");
             int spawnpoint = mapSystem.Map.Spawnpoint;
             player.SetLocalPosition(mapSystem.Map.IndexToWorldPos(spawnpoint));
 
-            systems.Get<CameraSystem>().SetTarget(player.transform);
-            
-            // make camera follow player. teleport, dont lerp
-
-            // player = Factory.CreateItem("Player");
-            // player.SetSprite(Assets.GetEntity(assets, "Player"));
-            // // Map.AddItem(map, player, new Coord(3, 3), CFG.LAYER_1);
-            // player.AddAction<PickupAction>();
-            // player.AddAction<PushAction>();
-            // ItemDataSystem.Set(player, new ItemData {
-            //     strength = 10
-            // });
-            //
-            // Item sword = Factory.CreateItem("Sword");
-            // sword.SetSprite(Assets.GetItem(assets, "Sword"));
-            // Property.Add<PropWeight>(sword);
-            // // Map.AddItem(map, sword, new Coord(new Vector2Int(4, 3)), CFG.LAYER_1);
-            //
-            // Item crate = Factory.CreateItem("Crate");
-            // crate.SetSprite(Assets.GetItem(assets, "Crate"));
-            // // Map.AddItem(map, crate, new Coord(5, 4), CFG.LAYER_1);
-            // Property.Add<PropPushable>(crate);
-            //
-            // selection = Factory.CreateItem("Selection");
-            // selection.SetSprite(Assets.GetMisc(assets, "Selection"));
-            // // Coord selectionCoord = PositionSystem.Get("Selection", new Vector2Int(3, 3));
-            // // selection.SetLocalPosition(selectionCoord.world);
-            // selection.SetSortingOrder(100);
-
-            // Camera.main.transform.position = new Vector3(CFG.MAP_WIDTH  * 0.5f,
-            // CFG.MAP_HEIGHT * 0.5f,
-            // -10.0f);
+            ctx.eventPump.Dispatch();
+            // systems.Get<CameraSystem>().SetTarget(player.transform);
         }
 
         public void Update(float dt) {
-
             switch (state) {
             case GameState.UNDEFINED:
-            case GameState.WARMUP:
-                Debug.Log($"GameState.Undefined || GameState.Warmup");
-                UpdateSystems();
                 state = GameState.AWAITING_PLAYER_INPUT;
             break;
             
@@ -133,22 +102,17 @@ namespace RL {
                 if (!GetInputCmd(inputState, out inputCmd)) {
                     break;
                 }
-                Debug.Log($"GameState.AwaitingPlayerInput : Input command {inputCmd}");
-                state = GameState.RESOLVE_ACTIONS;
+                state = GameState.RESOLVE_PLAYER_ACTIONS;
             break;
             
-            case GameState.RESOLVE_ACTIONS:
+            case GameState.RESOLVE_PLAYER_ACTIONS:
                 switch (inputCmd) {
                 case InputCommand.WALK:
-                    Debug.Log($"GameState.ResolveAction : Move");
-                    // move.Move(player, fromCoord, toCoord);
-                    // anim.DoMove(player.transform, 
-                    //             player.transform.position,
-                    //             selection.transform.position);
+                    // systems.Get<MovementSystem>().Move(player,
+                    //                                    );
                     break;
                 case InputCommand.INTERACT:
-                    Debug.Log($"GameState.ResolveAction : Interact");
-                    // resolve actions
+                    // resolve actions -> new animations
                     break;
                 }
                 // if left click mouse => walk
@@ -160,24 +124,32 @@ namespace RL {
                 // start animations
                 // Verbs.Main(this, player, PositionSystem.Get("Selection"));
                 
-                // anim.Run();
-                UpdateSystems();
-                state = GameState.PLAY_ANIMATIONS;
+                inputCmd = InputCommand.UNDEFINED; // consume the command
+                state = GameState.RESOLVE_NPC_ACTIONS;
             break;
             
-            case GameState.PLAY_ANIMATIONS:
-                // if (anim.IsRunning) {
-                //     UpdateSystems();
-                //     break;
-                // }
-                Debug.Log($"GameState.PlayAnimations : done");
+            case GameState.RESOLVE_NPC_ACTIONS:
+                // update npc ai
+                // resolve actions -> new animations
+                state = GameState.WILL_UPDATE_SYSTEMS;
+            break;
+            
+            case GameState.WILL_UPDATE_SYSTEMS:
+                ctx.eventPump.Dispatch();
+                systems.Get<AnimSystem>().Run();
+                state = GameState.UPDATE_SYSTEMS;
+            break;
+            
+            case GameState.UPDATE_SYSTEMS:
+                if (systems.Get<AnimSystem>().IsRunning) {
+                    // update sight system
+                    // update audio system
+                    // update position system
+                    break;
+                }
                 state = GameState.AWAITING_PLAYER_INPUT;
             break;
             }
-
-            // if (Property.Has<PropDead>(player)) {
-            //     return GameState.GAME_OVER;
-            // }
         }
 
         private static InputState GetInputState() {
@@ -221,15 +193,6 @@ namespace RL {
         private void UpdateSelection(Vector3 mousePos) {
             // Coord coord = new Coord(mousePos);
             // selection.SetLocalPosition(new Vector3(coord.map.x, coord.map.y));
-        }
-
-        private void UpdateSystems() {
-            // update visibility
-            // action system player
-            // update monster ai
-            // action system monsters
-            // play animations
-            // map indexing?
         }
     }
 }

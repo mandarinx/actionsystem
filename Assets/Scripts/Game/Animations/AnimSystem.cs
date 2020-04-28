@@ -17,7 +17,7 @@ namespace RL.Systems.Game {
                .GetComponent<AnimSystemRunner>();
         }
 
-        public void Init(IGameSystems gameSystems, IConfig config, IAssets assets) {
+        public void Init(IGameSystems gameSystems, Context ctx) {
         }
 
         public void Run() {

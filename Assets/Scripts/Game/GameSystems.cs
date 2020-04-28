@@ -1,28 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RL.Core;
 
 namespace RL.Systems.Game {
     public class GameSystems : IGameSystems {
-        
-        internal readonly List<IGameSystem> systems = new List<IGameSystem>();
+
+        internal readonly List<IGameSystem>             systems      = new List<IGameSystem>();
+        internal readonly Dictionary<Type, IGameSystem> systemsTable = new Dictionary<Type, IGameSystem>();
 
         public void Add(IGameSystem iGameSystem) {
+            Type gameSystemType = iGameSystem.GetType();
+            if (systemsTable.ContainsKey(gameSystemType)) {
+                return;
+            }
             systems.Add(iGameSystem);
+            systemsTable.Add(gameSystemType, iGameSystem);
         }
 
-        public void Init(IGameSystems gameSystems, IConfig config, IAssets assets) {
+        public void Init(IGameSystems gameSystems, Context context) {
             for (int i = 0; i < systems.Count; ++i) {
-                systems[i].Init(gameSystems, config, assets);
+                systems[i].Init(gameSystems, context);
             }
         }
 
         public T Get<T>() where T : IGameSystem {
-            for (int i = 0; i < systems.Count; ++i) {
-                if (systems[i] is T) {
-                    return (T) systems[i];
-                }
-            }
-            return default;
+            return systemsTable.TryGetValue(typeof(T), out IGameSystem gameSystem) 
+                ? (T) gameSystem 
+                : default;
         }
     }
 }

@@ -66,13 +66,10 @@ MonoBehaviour:
     m_ProfileVersion: 1
   m_LabelTable:
     m_LabelNames:
-    - default
-    - items
-    - entities
-    - misc
-    - walls
-    - floors
-    - prefabs
+    - sprites-items
+    - sprites-entities
+    - sprites-common
+    - prefabs-system
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 3863f99eaeb0d45ca82a6a909cbc038b, type: 2}

@@ -9,12 +9,12 @@ namespace RL.Systems.Game {
         private Camera mainCamera;
         private CinemachineVirtualCamera virtualCamera;
         
-        public void Init(IGameSystems gameSystems, IConfig config, IAssets assets) {
+        public void Init(IGameSystems gameSystems, Context ctx) {
             mainCamera = Object
-                        .Instantiate(((Assets) assets).GetPrefab("Main Camera"))
+                        .Instantiate(ctx.assets.Get<GameObject>("prefabs", "system/main camera"))
                         .GetComponent<Camera>();
             virtualCamera = Object
-                           .Instantiate(((Assets) assets).GetPrefab("CM vcam"))
+                           .Instantiate(ctx.assets.Get<GameObject>("prefabs", "system/cm vcam"))
                            .GetComponent<CinemachineVirtualCamera>();
         }
 

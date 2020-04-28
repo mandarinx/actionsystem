@@ -3,6 +3,6 @@
     public interface IGameSystems {
 
         void Add(IGameSystem iGameSystem);
-        void Init(IGameSystems gameSystems, IConfig config, IAssets assets);
+        void Init(IGameSystems gameSystems, Context context);
     }
 }

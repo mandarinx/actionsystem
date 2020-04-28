@@ -1,26 +1,35 @@
 {
-    "mapSystem": {
-        "tilemaps": [
+  "$type": "RL.Core.Config, Game.Core",
+  "configs": [
+    {
+      "$type": "RL.Systems.Map.MapSystemConfig, MapSystem",
+      "name": "Some kind of name",
+      "tilemaps": [
         {
-            "tiling": "autotile",
-            "groupName": "wall",
-            "themeName": "brick"
+          "$type": "RL.Systems.Map.TilemapConfig, MapSystem",
+          "name": "brick-wall",
+          "tilingMethod": 1,
+          "group": 11,
+          "theme": 1,
+          "tileNames": []
         },
         {
-            "tiling": "random",
-            "groupName": "common",
-            "tileNames": [
-                "Blank"
-            ]
+          "$type": "RL.Systems.Map.TilemapConfig, MapSystem",
+          "name": "stone-floor",
+          "tilingMethod": 2,
+          "group": 10,
+          "theme": 2,
+          "tileNames": []
         },
         {
-            "tiling": "random",
-            "groupName": "floor",
-            "themeName": "stone",
-            "tileNames": [
-                "Slabs",
-                "Tiles"
-            ]
-        }]
+          "$type": "RL.Systems.Map.TilemapConfig, MapSystem",
+          "name": "common",
+          "tilingMethod": 2,
+          "group": 1,
+          "theme": 0,
+          "tileNames": []
+        }
+      ]
     }
+  ]
 }

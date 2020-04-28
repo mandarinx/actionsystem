@@ -1,45 +1,80 @@
 ﻿using System.Collections;
 using AptGames;
+using Newtonsoft.Json;
+using RL.Core;
+using RL.Systems.Map;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace RL {
     
-    // inspired by ggez rust crate
-    // https://github.com/ggez/ggez
-    
-    // consider creating a context object, that holds common utilities lik
-    // - audio playing lib
-    // - event loop?
-    //   > dispatches system wide events. expects objects to be added via their interfaces, like
-    //     IGameEventAwake, IGameEventShutdown, IGameEventUpdate, etc
-    //   > could be passed inbto the context. that way the game loop can easily be customized
-    // - input system
-    // - file system lib
-    // - message system
-    // - config
-    //   > system config, like window size, fullscreen, audio level
-    
-    
     public class Bootstrapper : MonoBehaviour, IUpdate {
         
         public Game Game { get; private set; }
 
+        private Context ctx;
+
         private IEnumerator Start() {
+            
             AsyncOperationHandle<TextAsset> configHandle = Addressables.LoadAssetAsync<TextAsset>("config.txt");
             yield return configHandle;
-            Config config = JsonUtility.FromJson<Config>(configHandle.Result.text);
-            Config.Parse(config);
-
-            Assets assets = new Assets();
-            yield return assets.Load(config.mapSystem.tilemaps);
+            Config config = JsonConvert.DeserializeObject<Config>(configHandle.Result.text, 
+                                                                  new JsonSerializerSettings {
+                                                                      TypeNameHandling = TypeNameHandling.Objects
+                                                                  });
+            if (config == null) {
+                Debug.LogError($"Could not deserialize Config with contents: {configHandle.Result.text}");
+                yield break;
+            }
             
-            Game = new Game(config, assets);
+            config.Init();
+            
+            Assets assets = new Assets();
+            yield return assets.LoadSprites("items", "entities", "common");
+            yield return assets.LoadPrefabs("system");
+            yield return assets.LoadTilemaps(config.Get<MapSystemConfig>().tilemaps);
+
+            ctx = new Context(config, assets, new EventPump());
+            Game = new Game(ctx);
+            
             UnityUpdate.Add(this);
         }
+        
         public void OnUpdate(float dt) {
             Game.Update(dt);
+        }
+        
+        private static string CreateConfigJson() {
+            JsonSerializerSettings serializerSettings = new JsonSerializerSettings {
+                TypeNameHandling = TypeNameHandling.Objects,
+                Formatting       = Formatting.Indented
+            };
+        
+            Config cfg = new Config(new MapSystemConfig {
+                name = "Some kind of name",
+                tilemaps = new[] {
+                    new TilemapConfig {
+                        name         = "brick-wall",
+                        group        = Group.Wall,
+                        theme        = Theme.Brick,
+                        tilingMethod = TilingMethod.AUTOTILE
+                    },
+                    new TilemapConfig {
+                        name         = "stone-floor",
+                        group        = Group.Floor,
+                        theme        = Theme.Stone,
+                        tilingMethod = TilingMethod.RANDOM
+                    },
+                    new TilemapConfig {
+                        name         = "common",
+                        group        = Group.Common,
+                        tilingMethod = TilingMethod.RANDOM
+                    }
+                }
+            });
+            
+            return JsonConvert.SerializeObject(cfg, serializerSettings);
         }
     }
 }

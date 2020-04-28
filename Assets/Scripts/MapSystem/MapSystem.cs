@@ -17,7 +17,7 @@ namespace RL.Systems.Map {
             renderer = new MapRenderer(mapSysConfig.tilemaps);
         }
 
-        public void Init(IGameSystems gameSystems, IConfig config, IAssets assets) {
+        public void Init(IGameSystems gameSystems, Context ctx) {
         }
 
         public void Load(int[] mapData, int mapWidth, string mapName) {

@@ -6,14 +6,14 @@ using RL.Systems.Items;
 namespace RL {
 
     [UsedImplicitly]
-    [ActionSystem(typeof(PushAction), typeof(PropPushable))]
+    // [ActionSystem(typeof(PushAction), typeof(PropPushable))]
     public class PushSystem : IActionSystem, IGameSystem {
 
         private AnimSystem anim;
         // private Map map;
         
 
-        public void Init(IGameSystems gameSystems, IConfig config, IAssets assets) {
+        public void Init(IGameSystems gameSystems, Context ctx) {
             // anim = game.anim;
             // map = game.map;
         }
@@ -25,11 +25,11 @@ namespace RL {
             // if it isn't, cancel the move
             // if it is, move both source and target
 
-            PropPosition posSource = Property.Get<PropPosition>(source);
-            PropPosition posTarget = Property.Get<PropPosition>(target);
+            // PropPosition posSource = Property.Get<PropPosition>(source);
+            // PropPosition posTarget = Property.Get<PropPosition>(target);
 
-            Coord coordSource = PropPosition.GetCoord(posSource);
-            Coord coordTarget = PropPosition.GetCoord(posTarget);
+            // Coord coordSource = PropPosition.GetCoord(posSource);
+            // Coord coordTarget = PropPosition.GetCoord(posTarget);
             
             // Vector2Int dir = coordTarget.map - coordSource.map;
             // Vector2Int pushTargetMapCoord = coordTarget.map + dir;

@@ -1,16 +1,17 @@
-﻿using System;
+﻿using RL.Core;
 
 namespace RL.Systems.Map {
 
-    [Serializable]
-    public class MapSystemConfig {
-        
+    public class MapSystemConfig : ConfigBlock {
+        public string name;
         public TilemapConfig[] tilemaps;
 
-        public static void Parse(MapSystemConfig mapSystemConfig) {
-            for (int i = 0; i < mapSystemConfig.tilemaps.Length; ++i) {
-                TilemapConfig.Parse(mapSystemConfig.tilemaps[i]);
-            }
+        public override string ToString() {
+            return "MapSystemConfig {"+ 
+                   $"name: {name}, "+ 
+                   $"tilemaps: {tilemaps.Length}, "+ 
+                   "}"
+                ;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace RL.Core {
 
     public interface IGameSystem {
-        void Init(IGameSystems gameSystems, IConfig config, IAssets assets);
+        void Init(IGameSystems gameSystems, Context ctx);
     }
 }
